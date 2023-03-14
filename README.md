@@ -1,27 +1,20 @@
-# Next.js + Tailwind CSS Example
+# Set up this project
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+In terminal:
+git clone {url}
 
-## Deploy your own
+cd szakdolgozat
+npm i
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+Create a file called .env.local in the project root folder and paste this:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+GOOGLE_ID=420548840216-m96sd0664kcclaj2v9nrgvmlnq87eotd.apps.googleusercontent.com
+GOOGLE_SECRET=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
+NEXTAUTH_URL=http://localhost:3000/
+NEXTAUTH_SECRET=EzALegtitkosabbJelszo
 
-## How to use
+## You're ready to go
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+-> to start the server
 
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+npm run dev
