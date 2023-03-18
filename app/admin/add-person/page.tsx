@@ -38,8 +38,40 @@ function AddPerson() {
     date_of_admission: Date,
   });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    let fetchData;
+    if (role === 1) {
+      fetchData = {
+        ...values,
+        tablename: "consultants",
+        institution_name: consultantValues.institution_name,
+        faculty_name: consultantValues.faculty_name,
+        department_name: consultantValues.department_name,
+        title: consultantValues.title,
+        uni_role: consultantValues.uni_role,
+        degree: consultantValues.degree,
+      };
+    }
+    if (role === 2 || role === 3) {
+      fetchData = {
+        ...values,
+        tablename: "students",
+        consultant: studentValues.consultant,
+        topic: studentValues.topic,
+        financing: studentValues.financing,
+        date_of_admission: studentValues.date_of_admission,
+      };
+    }
+
+    const rawData = await fetch("http://localhost:3000/api/addPerson", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(fetchData),
+    }).then((response: Response) => console.log(response));
   };
 
   return (
@@ -72,13 +104,13 @@ function AddPerson() {
         />
       </div>
       <FormTextInput
-        labelContent="Firstname "
+        inputPlaceholder="Firstname "
         inputType="text"
         inputValue={values.firstname}
         onChange={(e) => setValues({ ...values, firstname: e.target.value })}
       />
       <FormTextInput
-        labelContent="Lastname "
+        inputPlaceholder="Lastname "
         inputType="text"
         inputValue={values.lastname}
         onChange={(e) => setValues({ ...values, lastname: e.target.value })}
@@ -91,7 +123,7 @@ function AddPerson() {
         </div>
       </div>
       <FormTextInput
-        labelContent="Email "
+        inputPlaceholder="Email "
         inputType="email"
         inputValue={values.email}
         onChange={(e) => setValues({ ...values, email: e.target.value })}
@@ -130,7 +162,7 @@ function AddPerson() {
             }
           />
           <FormTextInput
-            labelContent="Topic "
+            inputPlaceholder="Topic "
             inputType="text"
             inputValue={consultantValues.title}
             onChange={(e) =>
@@ -176,7 +208,7 @@ function AddPerson() {
             }
           />
           <FormTextInput
-            labelContent="Topic "
+            inputPlaceholder="Topic "
             inputType="text"
             inputValue={studentValues.topic}
             onChange={(e) =>
@@ -208,7 +240,7 @@ function AddPerson() {
                   border={false}
                 />
                 <FormTextInput
-                  labelContent=""
+                  inputPlaceholder=""
                   inputType="text"
                   inputValue={studentValues.financing}
                   onChange={(e) =>

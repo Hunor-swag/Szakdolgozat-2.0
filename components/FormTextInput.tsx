@@ -1,7 +1,6 @@
 import { ChangeEventHandler, FormEvent } from "react";
 
 type Props = {
-  labelContent: string;
   inputType: string;
   inputValue: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
@@ -9,7 +8,6 @@ type Props = {
 };
 
 function FormTextInput({
-  labelContent,
   inputType,
   inputValue,
   onChange,
@@ -17,7 +15,6 @@ function FormTextInput({
 }: Props) {
   return (
     <div className="mt-5 my-2 flex justify-between items-center">
-      <label className="mr-2">{labelContent}</label>
       <input
         type={inputType}
         value={inputValue}
