@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, use, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
 import FormSelectInput from "../../../components/FormSelectInput";
 import FormTextInput from "../../../components/FormTextInput";
 import { students } from "../../../constants";
@@ -53,7 +53,6 @@ function Exam() {
         });
     };
     getCommittees();
-    console.log(committees);
   }, []);
 
   useEffect(() => {
@@ -88,9 +87,61 @@ function Exam() {
     setCommission(newArray);
   };
 
+  function validateForm() {
+    if (
+      values.student === "" ||
+      values.consultant === "" ||
+      values.title === "" ||
+      values.date === "" ||
+      values.venue === "" ||
+      values.main_subject === "" ||
+      commission.length === 0 ||
+      otherSubjects.length === 0
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  useEffect(() => {
+    console.log(values);
+    console.log(otherSubjects);
+    console.log(commission);
+  }, [values, otherSubjects, commission]);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // if (!validateForm()) {
+    //   alert("Kérlek töltsd ki az összes mezőt!");
+    //   return;
+    // }
+    const body = JSON.stringify({
+      student: values.student,
+      consultant: "asdf",
+      title: values.title,
+      date: "2021-05-05",
+      venue: values.venue,
+      main_subject: values.main_subject,
+      otherSubjects: otherSubjects,
+      commission: commission,
+    });
+
+    const response = await fetch("http://localhost:3000/api/addExam", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <form>
-      <h1 className="text-5xl text-center mb-10">Complex exam</h1>
+    <form onSubmit={handleSubmit}>
+      <h1 className="text-5xl text-center mb-10">Komplex vizsga</h1>
       <FormSelectInput
         labelContent="Hallgató "
         onChange={(e) => setValues({ ...values, student: e.target.value })}
@@ -152,9 +203,9 @@ function Exam() {
           );
         })}
       </div>
-      <div>
+      <div className="flex flex-col">
         <h1 className="text-center text-xl mt-5">Bizottság:</h1>
-        <table className="text-center w-full">
+        <table className="text-center w-full border-separate border-spacing-x-5 ">
           <thead>
             <tr>
               <td className="flex">
@@ -201,6 +252,9 @@ function Exam() {
             })}
           </tbody>
         </table>
+        <button className="btn bg-green-600 hover:bg-green-500" type="submit">
+          Submit
+        </button>
       </div>
     </form>
   );
