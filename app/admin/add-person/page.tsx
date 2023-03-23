@@ -40,11 +40,13 @@ function AddPerson() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateForm()) return;
     let fetchData;
     if (role === 1) {
       fetchData = {
         ...values,
         tablename: "consultants",
+        role: "consultant",
         institution_name: consultantValues.institution_name,
         faculty_name: consultantValues.faculty_name,
         department_name: consultantValues.department_name,
@@ -56,6 +58,7 @@ function AddPerson() {
     if (role === 2 || role === 3) {
       fetchData = {
         ...values,
+        role: "student",
         tablename: "students",
         consultant: studentValues.consultant,
         topic: studentValues.topic,
@@ -73,6 +76,19 @@ function AddPerson() {
       body: JSON.stringify(fetchData),
     }).then((response: Response) => console.log(response));
   };
+
+  function validateForm() {
+    if (
+      values.firstname === "" ||
+      values.lastname === "" ||
+      values.email === "" ||
+      role === 0
+    ) {
+      alert("Kérem, töltse ki a szükséges mezőket!");
+      return false;
+    }
+    return true;
+  }
 
   return (
     <form

@@ -14,6 +14,7 @@ function FormSelectInput({ labelContent, options, onChange }: Props) {
         className="flex-1 rounded-lg outline-none text-black p-1"
         onChange={onChange}
       >
+        <option></option>
         {options.map((option, index) => {
           return <option key={index}>{option}</option>;
         })}

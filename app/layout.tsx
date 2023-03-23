@@ -3,7 +3,7 @@ import "../styles/globals.css";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import Login from "../components/Login";
-import Signout from "../components/Signout";
+import Header from "../components/Header";
 
 export default async function RootLayout({
   children,
@@ -19,9 +19,7 @@ export default async function RootLayout({
             <Login />
           ) : (
             <div>
-              <header className="flex justify-end">
-                <Signout />
-              </header>
+              <Header />
               {/* Menu or sidebar goes in this line */}
               <div>{children}</div>
             </div>

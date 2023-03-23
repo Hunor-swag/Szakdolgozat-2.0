@@ -69,6 +69,12 @@ function Exam() {
     getSubjects();
   }, []);
 
+  // useEffect(() => {
+  //   console.log(values);
+  //   console.log(commission);
+  //   console.log(otherSubjects);
+  // }, [values, commission, otherSubjects]);
+
   const handleOtherSubjectChange = (
     e: ChangeEvent<HTMLSelectElement>,
     index: number
@@ -92,7 +98,7 @@ function Exam() {
       values.student === "" ||
       values.consultant === "" ||
       values.title === "" ||
-      values.date === "" ||
+      // values.date === "" ||
       values.venue === "" ||
       values.main_subject === "" ||
       commission.length === 0 ||
@@ -103,21 +109,15 @@ function Exam() {
     return true;
   }
 
-  useEffect(() => {
-    console.log(values);
-    console.log(otherSubjects);
-    console.log(commission);
-  }, [values, otherSubjects, commission]);
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (!validateForm()) {
-    //   alert("Kérlek töltsd ki az összes mezőt!");
-    //   return;
-    // }
+    if (!validateForm()) {
+      alert("Kérlek töltsd ki az összes mezőt!");
+      return;
+    }
     const body = JSON.stringify({
       student: values.student,
-      consultant: "asdf",
+      consultant: values.consultant,
       title: values.title,
       date: "2021-05-05",
       venue: values.venue,
@@ -184,6 +184,7 @@ function Exam() {
           <MinusCircleIcon
             className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
             onClick={() => {
+              if (otherSubjects.length === 1) return;
               let newArray = [...otherSubjects];
               newArray.pop();
               setOtherSubjects(newArray);

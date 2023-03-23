@@ -12,7 +12,8 @@ export default function AdminLayout({
 
   return (
     <div>
-      {session?.user?.role === "admin" ? (
+      {session?.user?.role === "admin" ||
+      session?.user?.role === "main_admin" ? (
         <div className="flex justify-center p-5">{children}</div>
       ) : (
         <div className="flex justify-center p-5 items-center flex-col">
