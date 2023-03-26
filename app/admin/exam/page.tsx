@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
 import FormSelectInput from "../../../components/FormSelectInput";
 import FormTextInput from "../../../components/FormTextInput";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
+import { useFetch } from "../../../hooks/useFetch";
 
 function Exam() {
   const [values, setValues] = useState({
@@ -15,79 +16,17 @@ function Exam() {
     main_subject: "",
   });
 
-  const [consultants, setConsultants] = useState<string[]>([]);
+  const [students] = useFetch("http://localhost:3000/api/students");
 
-  const [students, setStudents] = useState<string[]>([]);
+  const [consultants] = useFetch("http://localhost:3000/api/consultants");
 
-  const [committees, setCommittees] = useState<string[]>([]);
+  const [committees] = useFetch("http://localhost:3000/api/committees");
 
   const [commission, setCommission] = useState<string[]>([""]);
 
-  const [subjects, setSubjects] = useState<string[]>([""]);
+  const [subjects] = useFetch("../subjects.json");
 
   const [otherSubjects, setOtherSubjects] = useState<string[]>([""]);
-
-  useEffect(() => {
-    const getStudents = async () => {
-      await fetch("http://localhost:3000/api/students")
-        .then((res) => res.json())
-        .then((data) => {
-          let studentsData: string[] = data.map((student: any) => {
-            return student.firstname + " " + student.lastname;
-          });
-          setStudents(studentsData);
-        });
-    };
-    getStudents();
-  }, []);
-
-  useEffect(() => {
-    const getConsultants = async () => {
-      await fetch("http://localhost:3000/api/consultants")
-        .then((res) => res.json())
-        .then((data) => {
-          let consultantsData: string[] = data.map((consultant: any) => {
-            return consultant.firstname + " " + consultant.lastname;
-          });
-          setConsultants(consultantsData);
-        });
-    };
-    getConsultants();
-  }, []);
-
-  useEffect(() => {
-    const getCommittees = async () => {
-      await fetch("http://localhost:3000/api/committees")
-        .then((res) => res.json())
-        .then((data) => {
-          let committeesData: string[] = data.map((committee: any) => {
-            return committee.firstname + " " + committee.lastname;
-          });
-          setCommittees(committeesData);
-        });
-    };
-    getCommittees();
-  }, []);
-
-  useEffect(() => {
-    const getSubjects = async () => {
-      await fetch("../subjects.json")
-        .then((res) => res.json())
-        .then((data) => {
-          let subjectsData: string[] = data.map((subject: any) => {
-            return subject.name;
-          });
-          setSubjects(subjectsData);
-        });
-    };
-    getSubjects();
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(values);
-  //   console.log(commission);
-  //   console.log(otherSubjects);
-  // }, [values, commission, otherSubjects]);
 
   const handleOtherSubjectChange = (
     e: ChangeEvent<HTMLSelectElement>,
@@ -140,7 +79,7 @@ function Exam() {
       commission: commission,
     });
 
-    const response = await fetch("http://localhost:3000/api/addExam", {
+    await fetch("http://localhost:3000/api/addExam", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -159,11 +98,15 @@ function Exam() {
       <FormSelectInput
         labelContent="Hallgató "
         onChange={(e) => setValues({ ...values, student: e.target.value })}
-        options={students}
+        options={students.map((student: any) => {
+          return student.firstname + " " + student.lastname;
+        })}
       />
       <FormSelectInput
         labelContent="Témavezető"
-        options={consultants}
+        options={consultants.map((consultant: any) => {
+          return consultant.firstname + " " + consultant.lastname;
+        })}
         onChange={(e) => setValues({ ...values, consultant: e.target.value })}
       />
       <FormTextInput
@@ -185,7 +128,9 @@ function Exam() {
       <FormSelectInput
         labelContent="Alap tárgy"
         onChange={(e) => setValues({ ...values, main_subject: e.target.value })}
-        options={subjects}
+        options={subjects.map((subject: any) => {
+          return subject.name;
+        })}
       />
 
       <div className="flex justify-between">
@@ -213,7 +158,9 @@ function Exam() {
               key={index}
               labelContent={`Melléktárgy ${index + 1}`}
               onChange={(e) => handleOtherSubjectChange(e, index)}
-              options={subjects}
+              options={subjects.map((subject: any) => {
+                return subject.name;
+              })}
             />
           );
         })}
@@ -250,7 +197,9 @@ function Exam() {
                     {index === 0 ? <p>Elnök</p> : <p>{index}. tag</p>}
                     <FormSelectInput
                       labelContent=""
-                      options={committees}
+                      options={committees.map((committee: any) => {
+                        return committee.firstname + " " + committee.lastname;
+                      })}
                       onChange={(e) => {
                         handleCommitteeChange(e, index);
                       }}

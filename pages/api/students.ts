@@ -3,20 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { collection, doc, getDocs, DocumentData } from "firebase/firestore";
 import { db } from "../../firebase";
 
-// type Data = {
-//   academic_degree: string;
-//   consultant_title: string;
-//   email: string;
-//   faculty: string;
-//   firstname: string;
-//   institution_name: string;
-//   lang: string;
-//   lastname: string;
-//   professorship: string;
-//   status: string;
-//   tablename: string;
-// };
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<DocumentData>
