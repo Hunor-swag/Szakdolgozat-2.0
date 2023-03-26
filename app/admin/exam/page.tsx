@@ -3,9 +3,7 @@
 import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
 import FormSelectInput from "../../../components/FormSelectInput";
 import FormTextInput from "../../../components/FormTextInput";
-import { students } from "../../../constants";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
-import Select from "react-select";
 
 function Exam() {
   const [values, setValues] = useState({
@@ -19,6 +17,8 @@ function Exam() {
 
   const [consultants, setConsultants] = useState<string[]>([]);
 
+  const [students, setStudents] = useState<string[]>([]);
+
   const [committees, setCommittees] = useState<string[]>([]);
 
   const [commission, setCommission] = useState<string[]>([""]);
@@ -26,6 +26,20 @@ function Exam() {
   const [subjects, setSubjects] = useState<string[]>([""]);
 
   const [otherSubjects, setOtherSubjects] = useState<string[]>([""]);
+
+  useEffect(() => {
+    const getStudents = async () => {
+      await fetch("http://localhost:3000/api/students")
+        .then((res) => res.json())
+        .then((data) => {
+          let studentsData: string[] = data.map((student: any) => {
+            return student.firstname + " " + student.lastname;
+          });
+          setStudents(studentsData);
+        });
+    };
+    getStudents();
+  }, []);
 
   useEffect(() => {
     const getConsultants = async () => {

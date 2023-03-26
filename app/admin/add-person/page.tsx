@@ -1,11 +1,10 @@
 "use client";
 
-import { FormEvent, MouseEvent, useState } from "react";
+import { FormEvent, MouseEvent, useState, useEffect } from "react";
 import FormRadioInput from "../../../components/FormRadioInput";
 import FormSelectInput from "../../../components/FormSelectInput";
 import FormTextInput from "../../../components/FormTextInput";
 import {
-  consultants,
   degree_types,
   department_names,
   faculty_names,
@@ -37,6 +36,24 @@ function AddPerson() {
     financing: "",
     date_of_admission: Date,
   });
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [consultants, setConsultants] = useState<string[]>([]);
+
+  useEffect(() => {
+    const getConsultants = async () => {
+      await fetch("http://localhost:3000/api/consultants")
+        .then((res) => res.json())
+        .then((data) => {
+          let consultantsData: string[] = data.map((consultant: any) => {
+            return consultant.firstname + " " + consultant.lastname;
+          });
+          setConsultants(consultantsData);
+        });
+    };
+    getConsultants();
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,6 +92,24 @@ function AddPerson() {
       },
       body: JSON.stringify(fetchData),
     }).then((response: Response) => console.log(response));
+
+    setValues({ firstname: "", lastname: "", email: "" });
+    setConsultantValues({
+      institution_name: "",
+      faculty_name: "",
+      department_name: "",
+      title: "",
+      uni_role: "",
+      degree: "",
+    });
+    setStudentValues({
+      consultant: "",
+      topic: "",
+      financing: "",
+      date_of_admission: Date,
+    });
+
+    setRole(0);
   };
 
   function validateForm() {
@@ -84,7 +119,10 @@ function AddPerson() {
       values.email === "" ||
       role === 0
     ) {
-      alert("Kérem, töltse ki a szükséges mezőket!");
+      setErrorMessage("Kérem, töltse ki a szükséges mezőket!");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
       return false;
     }
     return true;
@@ -272,7 +310,7 @@ function AddPerson() {
           </div>
         </div>
       )}
-
+      <div className="text-red-600 font-bold">{errorMessage}</div>
       <button type="submit" className="btn">
         Submit
       </button>

@@ -19,8 +19,6 @@ export default async function RootLayout({
             <Login />
           ) : (
             <div>
-              <Header />
-              {/* Menu or sidebar goes in this line */}
               <div>{children}</div>
             </div>
           )}

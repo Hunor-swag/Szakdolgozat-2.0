@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Header from "../../components/Header";
 
 export default function AdminLayout({
   children,
@@ -12,6 +13,7 @@ export default function AdminLayout({
 
   return (
     <div>
+      <Header />
       {session?.user?.role === "admin" ||
       session?.user?.role === "main_admin" ? (
         <div className="flex justify-center p-5">{children}</div>

@@ -40,10 +40,3 @@ export const consultants = [
   "Pekárdy Milán",
   "Vassányi István",
 ];
-
-export const students = [
-  "Mogyorósi Hunor",
-  "Szalai Máté",
-  "Géringer Ábel",
-  "Ipkovich Bálint",
-];
