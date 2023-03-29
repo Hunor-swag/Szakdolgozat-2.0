@@ -6,6 +6,12 @@ import FormTextInput from "../../../components/FormTextInput";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { useFetch } from "../../../hooks/useFetch";
 
+type Committee = {
+  name: string;
+  main_subj_examiner: boolean;
+  other_subj_examiner: boolean;
+};
+
 function Exam() {
   const [values, setValues] = useState({
     student: "",
@@ -16,13 +22,22 @@ function Exam() {
     main_subject: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const [selectedMainSubject, setSelectedMainSubject] = useState(-1);
+  const [selectedOtherSubject, setSelectedOtherSubject] = useState(-1);
+
   const [students] = useFetch("http://localhost:3000/api/students");
 
   const [consultants] = useFetch("http://localhost:3000/api/consultants");
 
   const [committees] = useFetch("http://localhost:3000/api/committees");
 
-  const [commission, setCommission] = useState<string[]>([""]);
+  const [commission, setCommission] = useState<Committee[]>([
+    { name: "", main_subj_examiner: false, other_subj_examiner: false },
+  ]);
 
   const [subjects] = useFetch("../subjects.json");
 
@@ -42,7 +57,11 @@ function Exam() {
     index: number
   ) => {
     let newArray = [...commission];
-    newArray[index] = e.target.value;
+    newArray[index] = {
+      name: e.target.value,
+      main_subj_examiner: false,
+      other_subj_examiner: false,
+    };
     setCommission(newArray);
   };
 
@@ -62,12 +81,7 @@ function Exam() {
     return true;
   }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      alert("Kérlek töltsd ki az összes mezőt!");
-      return;
-    }
+  async function sendFormData() {
     const body = JSON.stringify({
       student: values.student,
       consultant: values.consultant,
@@ -88,14 +102,79 @@ function Exam() {
       body: body,
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        setSuccessMessage("Személy sikeresen hozzáadva!");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
+      })
+      .catch((err) => {
+        setErrorMessage("Hiba történt: " + err);
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
+      });
+  }
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      setErrorMessage("Minden mező kitöltése kötelező!");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+      return;
+    }
+    await sendFormData();
+    resetForm();
   };
+
+  function resetForm() {
+    setCommission([
+      { name: "", main_subj_examiner: false, other_subj_examiner: false },
+    ]);
+    setOtherSubjects([""]);
+    setSelectedMainSubject(-1);
+    setSelectedOtherSubject(-1);
+    setValues({
+      student: "",
+      consultant: "",
+      title: "",
+      date: "",
+      venue: "",
+      main_subject: "",
+    });
+  }
+
+  useEffect(() => {
+    let newArray = [...commission];
+    newArray.map((committee, index) => {
+      if (index === selectedMainSubject) {
+        committee.main_subj_examiner = true;
+      } else {
+        committee.main_subj_examiner = false;
+      }
+    });
+    setCommission(newArray);
+  }, [selectedMainSubject]);
+
+  useEffect(() => {
+    let newArray = [...commission];
+    newArray.map((committee, index) => {
+      if (index === selectedOtherSubject) {
+        committee.other_subj_examiner = true;
+      } else {
+        committee.other_subj_examiner = false;
+      }
+    });
+    setCommission(newArray);
+  }, [selectedOtherSubject]);
 
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="text-5xl text-center mb-10">Komplex vizsga</h1>
       <FormSelectInput
+        value={values.student}
         labelContent="Hallgató "
         onChange={(e) => setValues({ ...values, student: e.target.value })}
         options={students.map((student: any) => {
@@ -103,6 +182,7 @@ function Exam() {
         })}
       />
       <FormSelectInput
+        value={values.consultant}
         labelContent="Témavezető"
         options={consultants.map((consultant: any) => {
           return consultant.firstname + " " + consultant.lastname;
@@ -126,6 +206,7 @@ function Exam() {
       />
 
       <FormSelectInput
+        value={values.main_subject}
         labelContent="Alap tárgy"
         onChange={(e) => setValues({ ...values, main_subject: e.target.value })}
         options={subjects.map((subject: any) => {
@@ -155,6 +236,7 @@ function Exam() {
         {otherSubjects.map((subject, index) => {
           return (
             <FormSelectInput
+              value={subject}
               key={index}
               labelContent={`Melléktárgy ${index + 1}`}
               onChange={(e) => handleOtherSubjectChange(e, index)}
@@ -173,7 +255,16 @@ function Exam() {
               <td className="flex">
                 <PlusCircleIcon
                   className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
-                  onClick={() => setCommission([...commission, ""])}
+                  onClick={() =>
+                    setCommission([
+                      ...commission,
+                      {
+                        name: "",
+                        main_subj_examiner: false,
+                        other_subj_examiner: false,
+                      },
+                    ])
+                  }
                 />
                 <MinusCircleIcon
                   className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
@@ -196,6 +287,7 @@ function Exam() {
                   <td className="flex items-center" key={index + "name"}>
                     {index === 0 ? <p>Elnök</p> : <p>{index}. tag</p>}
                     <FormSelectInput
+                      value={committee.name}
                       labelContent=""
                       options={committees.map((committee: any) => {
                         return committee.firstname + " " + committee.lastname;
@@ -206,16 +298,28 @@ function Exam() {
                     />
                   </td>
                   <td key={index + "main_subj"}>
-                    <input type="radio" name="main_subject" />
+                    <input
+                      type="radio"
+                      name="main_subject"
+                      onChange={() => setSelectedMainSubject(index)}
+                      checked={selectedMainSubject === index}
+                    />
                   </td>
                   <td key={index + "other_subj"}>
-                    <input type="checkbox" />
+                    <input
+                      type="radio"
+                      name="other_subject"
+                      onChange={() => setSelectedOtherSubject(index)}
+                      checked={selectedOtherSubject === index}
+                    />
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        <div className="text-red-600 font-bold">{errorMessage}</div>
+        <div className="text-green-600 font-bold">{successMessage}</div>
         <button className="btn bg-green-600 hover:bg-green-500" type="submit">
           Submit
         </button>

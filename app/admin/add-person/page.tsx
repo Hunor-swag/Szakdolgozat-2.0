@@ -39,6 +39,8 @@ function AddPerson() {
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [successMessage, setSuccessMessage] = useState("");
+
   const [consultants, setConsultants] = useState<string[]>([]);
 
   useEffect(() => {
@@ -57,7 +59,13 @@ function AddPerson() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setErrorMessage("Minden mező kitöltése kötelező!");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+      return;
+    }
     let fetchData;
     if (role === 1) {
       fetchData = {
@@ -91,7 +99,12 @@ function AddPerson() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(fetchData),
-    }).then((response: Response) => console.log(response));
+    }).then((response: Response) => {
+      setSuccessMessage("Személy sikeresen hozzáadva!");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 5000);
+    });
 
     setValues({ firstname: "", lastname: "", email: "" });
     setConsultantValues({
@@ -119,10 +132,6 @@ function AddPerson() {
       values.email === "" ||
       role === 0
     ) {
-      setErrorMessage("Kérem, töltse ki a szükséges mezőket!");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
       return false;
     }
     return true;
@@ -169,13 +178,6 @@ function AddPerson() {
         inputValue={values.lastname}
         onChange={(e) => setValues({ ...values, lastname: e.target.value })}
       />
-      <div className="my-2 text-center">
-        <label>Language</label>
-        <div className="flex flex-row justify-around">
-          <FormRadioInput labelContent="Hungarian" name="lang" border={false} />
-          <FormRadioInput labelContent="English" name="lang" border={false} />
-        </div>
-      </div>
       <FormTextInput
         inputPlaceholder="Email "
         inputType="email"
@@ -311,6 +313,7 @@ function AddPerson() {
         </div>
       )}
       <div className="text-red-600 font-bold">{errorMessage}</div>
+      <div className="text-green-600 font-bold">{successMessage}</div>
       <button type="submit" className="btn">
         Submit
       </button>

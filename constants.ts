@@ -1,5 +1,4 @@
 export const institution_names = [
-  "-",
   "Pannon Egyetem",
   "Budapesti Műszaki és Gazdaságtudományi Egyetem",
   "Corvinus Egyetem",
@@ -7,12 +6,10 @@ export const institution_names = [
 ];
 
 export const department_names = [
-  "-",
   "Villamosmérnöki és Információs Rendszerek Tanszék",
 ];
 
 export const faculty_names = [
-  "-",
   "Műszaki Informatikai Kar",
   "Mérnöki Kar",
   "Gazdaságtudományi Kar",
@@ -20,7 +17,6 @@ export const faculty_names = [
 ];
 
 export const uni_roles = [
-  "-",
   "Docens",
   "Egyetemi tanár",
   "Dékán",
@@ -32,7 +28,6 @@ export const uni_roles = [
 export const degree_types = ["-", "PhD", "DSc"];
 
 export const consultants = [
-  "-",
   "Dulai Tibor",
   "Baumgartner János",
   "Bertók Botond",

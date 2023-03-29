@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 export default async function handler(
@@ -8,10 +8,15 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const data = { ...req.body, role: "user" };
+      const data = req.body;
 
-      await setDoc(doc(db, "users", data.email), data);
-      console.log(`User created for email ${data.email}`);
+      await updateDoc(doc(db, "users", data.user), {
+        email: data.user,
+        role: data.role,
+      });
+      console.log(
+        data.user + " has been updated to " + data.role + " role successfully"
+      );
       res.status(200).end();
     } catch (err: any) {
       res.status(err).json("Error");

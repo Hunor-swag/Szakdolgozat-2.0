@@ -8,10 +8,17 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const data = { ...req.body, role: "user" };
+      const data = req.body;
 
-      await setDoc(doc(db, "users", data.email), data);
-      console.log(`User created for email ${data.email}`);
+      console.log(data);
+
+      await setDoc(
+        doc(db, "committees", data.firstname + " " + data.lastname),
+        data
+      );
+      console.log(
+        data.firstname + " " + data.lastname + " added to firestore!"
+      );
       res.status(200).end();
     } catch (err: any) {
       res.status(err).json("Error");

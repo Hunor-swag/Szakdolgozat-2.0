@@ -13,7 +13,7 @@ export default async function handler(
       console.log(data);
 
       await setDoc(doc(db, "exams", data.student), data);
-      console.log(data.student + " added to firestore!");
+      console.log(data.student + "'s exam added to firestore!");
       res.status(200).json("Success");
     } catch (err: any) {
       res.status(err).json("Error");

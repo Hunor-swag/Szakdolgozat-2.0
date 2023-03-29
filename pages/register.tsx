@@ -7,7 +7,6 @@ import FormTextInput from "../components/FormTextInput";
 function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +32,7 @@ function Register() {
 
   return (
     <div className="bg-gray-700 text-white w-screen h-screen">
-      <h1 className="text-center text-3xl font-semibold my-5">Register</h1>
+      <h1 className="text-center text-3xl font-semibold">Register</h1>
       <form
         onSubmit={onSubmit}
         className="flex flex-col items-center justify-center"

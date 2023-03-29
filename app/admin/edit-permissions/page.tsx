@@ -7,6 +7,10 @@ function EditPermissions() {
   const [users, setUsers] = useState<string[]>([]);
   const [user, setUser] = useState("");
   const [selected, setSelected] = useState("User");
+  const [message, setMessage] = useState({
+    msg: "",
+    color: "",
+  });
 
   useEffect(() => {
     const getUsers = async () => {
@@ -22,13 +26,39 @@ function EditPermissions() {
     getUsers();
   }, []);
 
+  const sendData = async () => {
+    await fetch("http://localhost:3000/api/updateRole", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user: user, role: selected.toLowerCase() }),
+    })
+      .then(() => {
+        setMessage({ msg: "Sikeres módosítás!", color: "text-green-500" });
+        setTimeout(() => {
+          setMessage({ msg: "", color: "" });
+        }, 5000);
+      })
+      .catch(() => {
+        setMessage({
+          msg: "Hiba történt a módosítás közben!",
+          color: "text-red-500",
+        });
+        setTimeout(() => {
+          setMessage({ msg: "", color: "" });
+        });
+      });
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    // TODO: Add logic to update user role
     e.preventDefault();
+    sendData();
   };
 
   return (
-    <form className="flex flex-col" onSubmit={(e) => handleSubmit}>
+    <form className="flex flex-col" onSubmit={handleSubmit}>
       <FormSelectInput
         labelContent="User:"
         onChange={(e) => {
@@ -43,6 +73,9 @@ function EditPermissions() {
         }}
         options={["User", "Admin"]}
       />
+      <div className={`text-center font-semibold ${message.color}`}>
+        {message.msg}
+      </div>
       <button className="btn self-center" type="submit">
         Submit
       </button>
