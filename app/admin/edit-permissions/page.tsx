@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import FormSelectInput from "../../../components/FormSelectInput";
+import { FormSelectInput } from "../../../components/FormSelectInput";
 
 function EditPermissions() {
   const [users, setUsers] = useState<string[]>([]);

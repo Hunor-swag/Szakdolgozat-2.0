@@ -8,7 +8,7 @@ type Props = {
   onClick?: MouseEventHandler<HTMLInputElement>;
 };
 
-function FormRadioInput({
+export function FormRadioInput({
   labelContent,
   name,
   border,
@@ -32,5 +32,3 @@ function FormRadioInput({
     </div>
   );
 }
-
-export default FormRadioInput;

@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, MouseEvent, useState, useEffect } from "react";
-import FormRadioInput from "../../../components/FormRadioInput";
-import FormSelectInput from "../../../components/FormSelectInput";
-import FormTextInput from "../../../components/FormTextInput";
+import { FormRadioInput } from "../../../components/FormRadioInput";
+import { FormSelectInput } from "../../../components/FormSelectInput";
+import { FormTextInput } from "../../../components/FormTextInput";
 import {
   degree_types,
   department_names,

@@ -7,7 +7,7 @@ type Props = {
   inputPlaceholder?: string;
 };
 
-function FormTextInput({
+export function FormTextInput({
   inputType,
   inputValue,
   onChange,
@@ -25,5 +25,3 @@ function FormTextInput({
     </div>
   );
 }
-
-export default FormTextInput;

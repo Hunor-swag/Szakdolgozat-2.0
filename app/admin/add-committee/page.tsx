@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import FormTextInput from "../../../components/FormTextInput";
+import { FormTextInput } from "../../../components/FormTextInput";
 
 function AddCommittee() {
   const [values, setValues] = useState({
