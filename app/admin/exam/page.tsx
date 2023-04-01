@@ -1,8 +1,8 @@
 "use client";
 
 import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
-import FormSelectInput from "../../../components/FormSelectInput";
-import FormTextInput from "../../../components/FormTextInput";
+import { FormSelectInput } from "../../../components/FormSelectInput";
+import { FormTextInput } from "../../../components/FormTextInput";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { useFetch } from "../../../hooks/useFetch";
 

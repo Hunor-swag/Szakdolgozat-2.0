@@ -7,7 +7,12 @@ type Props = {
   value?: string;
 };
 
-function FormSelectInput({ labelContent, options, onChange, value }: Props) {
+export function FormSelectInput({
+  labelContent,
+  options,
+  onChange,
+  value,
+}: Props) {
   return (
     <div className="my-2 flex items-center">
       <label className="mr-2">{labelContent}</label>
@@ -24,5 +29,3 @@ function FormSelectInput({ labelContent, options, onChange, value }: Props) {
     </div>
   );
 }
-
-export default FormSelectInput;

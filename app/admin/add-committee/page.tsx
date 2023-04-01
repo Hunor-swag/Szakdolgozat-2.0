@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import FormTextInput from "../../../components/FormTextInput";
+import { FormTextInput } from "../../../components/FormTextInput";
 
 // bizottsági tagoknak több mező (lásd a személy hozzáadásánál)
 
