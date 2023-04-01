@@ -6,6 +6,9 @@ import FormTextInput from "../../../components/FormTextInput";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { useFetch } from "../../../hooks/useFetch";
 
+// Csak egy melléktárgy
+// bizottságnál 2. taggal kezdődjön
+
 type Committee = {
   name: string;
   main_subj_examiner: boolean;

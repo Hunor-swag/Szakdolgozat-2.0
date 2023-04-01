@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import FormTextInput from "../../../components/FormTextInput";
 
+// bizottsági tagoknak több mező (lásd a személy hozzáadásánál)
+
 function AddCommittee() {
   const [values, setValues] = useState({
     firstname: "",

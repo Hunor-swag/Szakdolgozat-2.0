@@ -12,6 +12,10 @@ import {
   uni_roles,
 } from "../../../constants";
 
+// TODO:
+// Egyéni felkészüléses hallgató plusz mező, ami tárolja
+// Több témavezető max 2
+
 function AddPerson() {
   const [values, setValues] = useState({
     firstname: "",
