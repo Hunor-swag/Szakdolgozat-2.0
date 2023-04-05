@@ -1,9 +1,11 @@
 "use client";
 
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { FormEvent, MouseEvent, useState, useEffect } from "react";
 import { FormRadioInput } from "../../../components/FormRadioInput";
 import { FormSelectInput } from "../../../components/FormSelectInput";
 import { FormTextInput } from "../../../components/FormTextInput";
+import { RadioButton } from "../../../components/RadioButton";
 import {
   degree_types,
   department_names,
@@ -13,7 +15,6 @@ import {
 } from "../../../constants";
 
 // TODO:
-// Egyéni felkészüléses hallgató plusz mező, ami tárolja
 // Több témavezető max 2
 
 function AddPerson() {
@@ -34,8 +35,11 @@ function AddPerson() {
     degree: "",
   });
 
+  const [selectedFinance, setSelectedFinance] = useState("");
+  const [financeType, setFinanceType] = useState("");
+
   const [studentValues, setStudentValues] = useState({
-    consultant: "",
+    consultants: [""],
     topic: "",
     financing: "",
     date_of_admission: Date,
@@ -61,15 +65,7 @@ function AddPerson() {
     getConsultants();
   }, []);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      setErrorMessage("Minden mező kitöltése kötelező!");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
-      return;
-    }
+  const fetchData = async () => {
     let fetchData;
     if (role === 1) {
       fetchData = {
@@ -89,10 +85,14 @@ function AddPerson() {
         ...values,
         role: "student",
         tablename: "students",
-        consultant: studentValues.consultant,
+        consultants: studentValues.consultants,
         topic: studentValues.topic,
-        financing: studentValues.financing,
+        financing:
+          selectedFinance === "Other"
+            ? studentValues.financing
+            : selectedFinance,
         date_of_admission: studentValues.date_of_admission,
+        individual_prep: role === 3,
       };
     }
 
@@ -109,7 +109,24 @@ function AddPerson() {
         setSuccessMessage("");
       }, 5000);
     });
+  };
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      setErrorMessage("Minden mező kitöltése kötelező!");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+      return;
+    }
+
+    fetchData();
+
+    resetForm();
+  };
+
+  const resetForm = () => {
     setValues({ firstname: "", lastname: "", email: "" });
     setConsultantValues({
       institution_name: "",
@@ -120,13 +137,13 @@ function AddPerson() {
       degree: "",
     });
     setStudentValues({
-      consultant: "",
+      consultants: [""],
       topic: "",
       financing: "",
       date_of_admission: Date,
     });
-
     setRole(0);
+    setSelectedFinance("");
   };
 
   function validateForm() {
@@ -257,16 +274,49 @@ function AddPerson() {
 
       {(role === 2 || role === 3) && (
         <div>
-          <FormSelectInput
-            labelContent="Consultant"
-            options={consultants}
-            onChange={(e) =>
-              setStudentValues({
-                ...studentValues,
-                consultant: e.target.value,
-              })
-            }
-          />
+          <div className="flex justify-between">
+            Consultants:
+            <div className="flex">
+              <PlusCircleIcon
+                className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
+                onClick={() => {
+                  if (studentValues.consultants.length > 1) return;
+                  setStudentValues({
+                    ...studentValues,
+                    consultants: [...studentValues.consultants, ""],
+                  });
+                }}
+              />
+              <MinusCircleIcon
+                className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
+                onClick={() => {
+                  if (studentValues.consultants.length === 1) return;
+                  let newArray = [...studentValues.consultants];
+                  newArray.pop();
+                  setStudentValues({ ...studentValues, consultants: newArray });
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-stretch">
+            {studentValues.consultants.map((consultant, index) => {
+              return (
+                <FormSelectInput
+                  labelContent={`Consultant #${index + 1}`}
+                  options={consultants}
+                  onChange={(e) => {
+                    let newArray = studentValues.consultants;
+                    newArray[index] = e.target.value;
+                    setStudentValues({
+                      ...studentValues,
+                      consultants: newArray,
+                    });
+                  }}
+                />
+              );
+            })}
+          </div>
           <FormTextInput
             inputPlaceholder="Topic "
             inputType="text"
@@ -278,39 +328,49 @@ function AddPerson() {
           <div className="my-2 text-center">
             <label>Financing method</label>
             <div className="flex flex-row justify-around flex-wrap">
-              <FormRadioInput
-                labelContent="Publicly funded"
+              <RadioButton
+                value="Publicly funded"
+                label="Publicly funded"
                 name="finance"
-                border={false}
+                selectedValue={selectedFinance}
+                setSelectedValue={setSelectedFinance}
               />
-              <FormRadioInput
-                labelContent="Self funded"
+              <RadioButton
+                value="Self funded"
+                label="Self funded"
                 name="finance"
-                border={false}
+                selectedValue={selectedFinance}
+                setSelectedValue={setSelectedFinance}
               />
-              <FormRadioInput
-                labelContent="Stipendium Hungaricum"
+              <RadioButton
+                value="Stipendicum Hungaricum"
+                label="Stipendicum Hungaricum"
                 name="finance"
-                border={false}
+                selectedValue={selectedFinance}
+                setSelectedValue={setSelectedFinance}
               />
-              <div className="flex flex-row">
-                <FormRadioInput
-                  labelContent="Else: "
+              <div>
+                <RadioButton
+                  value="Other"
+                  label="Other"
                   name="finance"
-                  border={false}
+                  selectedValue={selectedFinance}
+                  setSelectedValue={setSelectedFinance}
                 />
+              </div>
+              {selectedFinance === "Other" && (
                 <FormTextInput
-                  inputPlaceholder=""
                   inputType="text"
                   inputValue={studentValues.financing}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setStudentValues({
                       ...studentValues,
                       financing: e.target.value,
-                    })
-                  }
+                    });
+                  }}
+                  inputPlaceholder="Finance type"
                 />
-              </div>
+              )}
               {/* Datepicker: Date of admission */}
             </div>
           </div>

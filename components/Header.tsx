@@ -3,7 +3,7 @@ import Signout from "./Signout";
 
 const Header = () => {
   return (
-    <header className="flex justify-end space-x-5 p-5 border-b-2">
+    <header className="flex justify-end space-x-5 p-5 border-b-2 flex-wrap-reverse">
       <HeaderItem text="Add person" href="/admin/add-person" />
       <HeaderItem text="Exam" href="/admin/exam" />
       <HeaderItem text="Add committee" href="/admin/add-committee" />

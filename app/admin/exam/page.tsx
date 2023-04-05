@@ -258,16 +258,17 @@ function Exam() {
               <td className="flex">
                 <PlusCircleIcon
                   className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
-                  onClick={() =>
-                    setCommission([
-                      ...commission,
-                      {
-                        name: "",
-                        main_subj_examiner: false,
-                        other_subj_examiner: false,
-                      },
-                    ])
-                  }
+                  onClick={() => {
+                    if (commission.length < 5)
+                      setCommission([
+                        ...commission,
+                        {
+                          name: "",
+                          main_subj_examiner: false,
+                          other_subj_examiner: false,
+                        },
+                      ]);
+                  }}
                 />
                 <MinusCircleIcon
                   className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
@@ -288,7 +289,7 @@ function Exam() {
               return (
                 <tr key={index}>
                   <td className="flex items-center" key={index + "name"}>
-                    {index === 0 ? <p>Elnök</p> : <p>{index}. tag</p>}
+                    {index === 0 ? <p>Elnök</p> : <p>{index + 1}. tag</p>}
                     <FormSelectInput
                       value={committee.name}
                       labelContent=""

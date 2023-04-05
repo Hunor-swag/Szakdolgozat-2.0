@@ -1,7 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { FormSelectInput } from "../../../components/FormSelectInput";
 import { FormTextInput } from "../../../components/FormTextInput";
+
+import {
+  degree_types,
+  department_names,
+  institution_names,
+  uni_roles,
+} from "../../../constants";
 
 // bizottsági tagoknak több mező (lásd a személy hozzáadásánál)
 
@@ -9,6 +17,10 @@ function AddCommittee() {
   const [values, setValues] = useState({
     firstname: "",
     lastname: "",
+    institution_name: "",
+    department_name: "",
+    uni_role: "",
+    degree: "",
   });
 
   const [message, setMessage] = useState({
@@ -17,7 +29,14 @@ function AddCommittee() {
   });
 
   const validateForm = () => {
-    if (values.firstname === "" || values.lastname === "") {
+    if (
+      values.firstname === "" ||
+      values.lastname === "" ||
+      values.institution_name === "" ||
+      values.department_name === "" ||
+      values.uni_role === "" ||
+      values.degree === ""
+    ) {
       displayMessage("Minden mező kitöltése kötelező!", "text-red-500");
       return false;
     }
@@ -28,6 +47,10 @@ function AddCommittee() {
     setValues({
       firstname: "",
       lastname: "",
+      institution_name: "",
+      department_name: "",
+      uni_role: "",
+      degree: "",
     });
   };
 
@@ -53,6 +76,8 @@ function AddCommittee() {
     })
       .then((response: Response) => {
         displayMessage("Személy sikeresen hozzáadva!", "text-green-500");
+
+        resetData();
       })
       .catch((err) => {
         displayMessage(
@@ -65,7 +90,6 @@ function AddCommittee() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendData();
-    resetData();
   };
 
   return (
@@ -84,6 +108,35 @@ function AddCommittee() {
           inputValue={values.lastname}
           onChange={(e) => setValues({ ...values, lastname: e.target.value })}
         />
+        <FormSelectInput
+          labelContent="Name of institution"
+          options={institution_names}
+          value={values.institution_name}
+          onChange={(e) =>
+            setValues({ ...values, institution_name: e.target.value })
+          }
+        />
+        <FormSelectInput
+          labelContent="Name of department"
+          options={department_names}
+          value={values.department_name}
+          onChange={(e) =>
+            setValues({ ...values, department_name: e.target.value })
+          }
+        />
+        <FormSelectInput
+          labelContent="Rank"
+          options={uni_roles}
+          value={values.uni_role}
+          onChange={(e) => setValues({ ...values, uni_role: e.target.value })}
+        />
+        <FormSelectInput
+          labelContent="Degree"
+          options={degree_types}
+          value={values.degree}
+          onChange={(e) => setValues({ ...values, degree: e.target.value })}
+        />
+
         <div className={`text-semibold ${message?.color}`}>{message.msg}</div>
         <button className="btn" type="submit">
           Submit

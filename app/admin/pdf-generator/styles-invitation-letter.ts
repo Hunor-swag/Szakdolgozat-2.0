@@ -82,9 +82,6 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     width: "auto",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#bfbfbf",
     marginBottom: 10,
     fontFamily: "Roboto",
     fontSize: 11,
@@ -97,16 +94,10 @@ export const styles = StyleSheet.create({
   tableColumn1: {
     width: "30%",
     padding: 5,
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#bfbfbf",
   },
   tableColumn2: {
     width: "70%",
     padding: 5,
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#bfbfbf",
   },
   plainText: {
     marginTop: 10,
