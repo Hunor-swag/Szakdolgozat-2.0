@@ -77,4 +77,56 @@ export const styles = StyleSheet.create({
   content: {
     fontFamily: "Roboto",
   },
+
+  table: {
+    display: "flex",
+    flexDirection: "column",
+    width: "auto",
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#bfbfbf",
+    marginBottom: 10,
+    fontFamily: "Roboto",
+    fontSize: 11,
+  },
+  tableRow: {
+    margin: "auto",
+    flexDirection: "row",
+    display: "flex",
+  },
+  tableColumn1: {
+    width: "30%",
+    padding: 5,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#bfbfbf",
+  },
+  tableColumn2: {
+    width: "70%",
+    padding: 5,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#bfbfbf",
+  },
+  plainText: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  signatureContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    fontFamily: "Roboto",
+    marginLeft: "45%",
+  },
+  footNote: {
+    display: "flex",
+    alignItems: "center",
+    fontSize: 10,
+    marginTop: 20,
+    position: "absolute",
+    bottom: 30,
+    left: 0,
+    right: 0,
+  },
 });
