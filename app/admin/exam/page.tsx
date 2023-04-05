@@ -1,28 +1,22 @@
 "use client";
 
-import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FormSelectInput } from "../../../components/FormSelectInput";
 import { FormTextInput } from "../../../components/FormTextInput";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { useFetch } from "../../../hooks/useFetch";
+import { Committee, Student } from "../../../types/typings";
 
 // Csak egy melléktárgy
 // bizottságnál 2. taggal kezdődjön
 
-type Committee = {
-  name: string;
-  main_subj_examiner: boolean;
-  other_subj_examiner: boolean;
-};
-
 function Exam() {
   const [values, setValues] = useState({
-    student: "",
-    consultant: "",
-    title: "",
+    student: {} as Student | undefined,
     date: "",
     venue: "",
     main_subject: "",
+    other_subject: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -34,50 +28,72 @@ function Exam() {
 
   const [students] = useFetch("http://localhost:3000/api/students");
 
-  const [consultants] = useFetch("http://localhost:3000/api/consultants");
-
   const [committees] = useFetch("http://localhost:3000/api/committees");
 
-  const [commission, setCommission] = useState<Committee[]>([
-    { name: "", main_subj_examiner: false, other_subj_examiner: false },
+  const [commission, setCommission] = useState([
+    {
+      firstname: "",
+      lastname: "",
+      uni_role: "",
+      degree: "",
+      institution_name: "",
+      short_institution_name: "",
+      department_name: "",
+      main_subj_examiner: false,
+      other_subj_examiner: false,
+    },
   ]);
 
   const [subjects] = useFetch("../subjects.json");
-
-  const [otherSubjects, setOtherSubjects] = useState<string[]>([""]);
-
-  const handleOtherSubjectChange = (
-    e: ChangeEvent<HTMLSelectElement>,
-    index: number
-  ) => {
-    let newArray = [...otherSubjects];
-    newArray[index] = e.target.value;
-    setOtherSubjects(newArray);
-  };
 
   const handleCommitteeChange = (
     e: ChangeEvent<HTMLSelectElement>,
     index: number
   ) => {
     let newArray = [...commission];
-    newArray[index] = {
-      name: e.target.value,
-      main_subj_examiner: false,
-      other_subj_examiner: false,
-    };
+
+    for (let i = 0; i < committees.length; i++) {
+      const committeesArray = committees as Committee[];
+      if (
+        committeesArray[i].lastname + " " + committeesArray[i].firstname ===
+        e.target.value
+      ) {
+        newArray[index] = {
+          firstname: committeesArray[i].firstname,
+          lastname: committeesArray[i].lastname,
+          uni_role: committeesArray[i].uni_role,
+          degree: committeesArray[i].degree,
+          institution_name: committeesArray[i].institution_name,
+          short_institution_name: committeesArray[i].short_institution_name,
+          department_name: committeesArray[i].department_name,
+          main_subj_examiner: false,
+          other_subj_examiner: false,
+        };
+        break;
+      }
+    }
+    // newArray[index] = {
+    //   firstname: committeeData?.firstname,
+    //   lastname: committeeData?.lastname,
+    //   uni_role: committeeData?.uni_role,
+    //   degree: committeeData?.degree,
+    //   institution_name: committeeData?.institution_name,
+    //   short_institution_name: committeeData?.short_institution_name,
+    //   department_name: committeeData?.department_name,
+    //   main_subj_examiner: false,
+    //   other_subj_examiner: false,
+    // };
     setCommission(newArray);
   };
 
   function validateForm() {
     if (
-      values.student === "" ||
-      values.consultant === "" ||
-      values.title === "" ||
+      !values.student ||
       // values.date === "" ||
       values.venue === "" ||
       values.main_subject === "" ||
-      commission.length === 0 ||
-      otherSubjects.length === 0
+      values.other_subject === "" ||
+      commission.length === 0
     ) {
       return false;
     }
@@ -85,14 +101,19 @@ function Exam() {
   }
 
   async function sendFormData() {
+    let studentsArray = students as Student[];
+    const student = studentsArray.find(
+      (student) =>
+        student.lastname + " " + student.firstname ===
+        values.student?.lastname + " " + values.student?.firstname
+    );
+
     const body = JSON.stringify({
-      student: values.student,
-      consultant: values.consultant,
-      title: values.title,
+      student: student,
       date: "2021-05-05",
       venue: values.venue,
       main_subject: values.main_subject,
-      otherSubjects: otherSubjects,
+      other_subject: values.other_subject,
       commission: commission,
     });
 
@@ -134,18 +155,26 @@ function Exam() {
 
   function resetForm() {
     setCommission([
-      { name: "", main_subj_examiner: false, other_subj_examiner: false },
+      {
+        firstname: "",
+        lastname: "",
+        degree: "",
+        uni_role: "",
+        institution_name: "",
+        short_institution_name: "",
+        department_name: "",
+        main_subj_examiner: false,
+        other_subj_examiner: false,
+      },
     ]);
-    setOtherSubjects([""]);
     setSelectedMainSubject(-1);
     setSelectedOtherSubject(-1);
     setValues({
-      student: "",
-      consultant: "",
-      title: "",
+      student: {} as Student,
       date: "",
       venue: "",
       main_subject: "",
+      other_subject: "",
     });
   }
 
@@ -173,30 +202,25 @@ function Exam() {
     setCommission(newArray);
   }, [selectedOtherSubject]);
 
+  function handleStudentChange(e: ChangeEvent<HTMLSelectElement>) {
+    const studentsArray = students as Student[];
+    const student = studentsArray.find(
+      (student) => student.lastname + " " + student.firstname === e.target.value
+    );
+    console.log(student);
+    setValues({ ...values, student: student });
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="text-5xl text-center mb-10">Komplex vizsga</h1>
       <FormSelectInput
-        value={values.student}
+        value={values.student?.lastname + " " + values.student?.firstname}
         labelContent="Hallgató "
-        onChange={(e) => setValues({ ...values, student: e.target.value })}
+        onChange={handleStudentChange}
         options={students.map((student: any) => {
-          return student.firstname + " " + student.lastname;
+          return student.lastname + " " + student.firstname;
         })}
-      />
-      <FormSelectInput
-        value={values.consultant}
-        labelContent="Témavezető"
-        options={consultants.map((consultant: any) => {
-          return consultant.firstname + " " + consultant.lastname;
-        })}
-        onChange={(e) => setValues({ ...values, consultant: e.target.value })}
-      />
-      <FormTextInput
-        inputPlaceholder="A téma címe"
-        inputType="text"
-        inputValue={values.title}
-        onChange={(e) => setValues({ ...values, title: e.target.value })}
       />
 
       {/* Datepicker here */}
@@ -217,39 +241,16 @@ function Exam() {
         })}
       />
 
-      <div className="flex justify-between">
-        Melléktárgyak:{" "}
-        <div className="flex">
-          <PlusCircleIcon
-            className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
-            onClick={() => setOtherSubjects([...otherSubjects, ""])}
-          />
-          <MinusCircleIcon
-            className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
-            onClick={() => {
-              if (otherSubjects.length === 1) return;
-              let newArray = [...otherSubjects];
-              newArray.pop();
-              setOtherSubjects(newArray);
-            }}
-          />
-        </div>
-      </div>
-      <div>
-        {otherSubjects.map((subject, index) => {
-          return (
-            <FormSelectInput
-              value={subject}
-              key={index}
-              labelContent={`Melléktárgy ${index + 1}`}
-              onChange={(e) => handleOtherSubjectChange(e, index)}
-              options={subjects.map((subject: any) => {
-                return subject.name;
-              })}
-            />
-          );
+      <FormSelectInput
+        value={values.other_subject}
+        labelContent="Melléktárgy"
+        onChange={(e) => {
+          setValues({ ...values, other_subject: e.target.value });
+        }}
+        options={subjects.map((subject: any) => {
+          return subject.name;
         })}
-      </div>
+      />
       <div className="flex flex-col">
         <h1 className="text-center text-xl mt-5">Bizottság:</h1>
         <table className="text-center w-full border-separate border-spacing-x-5 ">
@@ -263,7 +264,13 @@ function Exam() {
                       setCommission([
                         ...commission,
                         {
-                          name: "",
+                          firstname: "",
+                          lastname: "",
+                          uni_role: "",
+                          degree: "",
+                          institution_name: "",
+                          short_institution_name: "",
+                          department_name: "",
                           main_subj_examiner: false,
                           other_subj_examiner: false,
                         },
@@ -291,10 +298,10 @@ function Exam() {
                   <td className="flex items-center" key={index + "name"}>
                     {index === 0 ? <p>Elnök</p> : <p>{index + 1}. tag</p>}
                     <FormSelectInput
-                      value={committee.name}
+                      value={committee.lastname + " " + committee.firstname}
                       labelContent=""
                       options={committees.map((committee: any) => {
-                        return committee.firstname + " " + committee.lastname;
+                        return committee.lastname + " " + committee.firstname;
                       })}
                       onChange={(e) => {
                         handleCommitteeChange(e, index);

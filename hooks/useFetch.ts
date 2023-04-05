@@ -1,3 +1,5 @@
+import { error } from "console";
+import Error from "next/error";
 import { useState, useEffect } from "react";
 
 export const useFetch = (url: string) => {
@@ -10,7 +12,9 @@ export const useFetch = (url: string) => {
       setData(data);
     };
 
-    fetchData();
+    fetchData()
+      .then()
+      .catch((error) => console.log(error));
   }, [url]);
 
   return [data];

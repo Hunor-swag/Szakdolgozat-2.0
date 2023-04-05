@@ -1,7 +1,7 @@
 "use client";
 
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { FormEvent, MouseEvent, useState, useEffect } from "react";
+import { FormEvent, MouseEvent, useState, useEffect, ChangeEvent } from "react";
 import { FormRadioInput } from "../../../components/FormRadioInput";
 import { FormSelectInput } from "../../../components/FormSelectInput";
 import { FormTextInput } from "../../../components/FormTextInput";
@@ -13,9 +13,8 @@ import {
   institution_names,
   uni_roles,
 } from "../../../constants";
-
-// TODO:
-// Több témavezető max 2
+import { useFetch } from "../../../hooks/useFetch";
+import { Consultant } from "../../../types/typings";
 
 function AddPerson() {
   const [values, setValues] = useState({
@@ -36,10 +35,10 @@ function AddPerson() {
   });
 
   const [selectedFinance, setSelectedFinance] = useState("");
-  const [financeType, setFinanceType] = useState("");
 
   const [studentValues, setStudentValues] = useState({
-    consultants: [""],
+    consultant1: {} as Consultant | null | undefined,
+    consultant2: {} as Consultant | null | undefined,
     topic: "",
     financing: "",
     date_of_admission: Date,
@@ -49,21 +48,7 @@ function AddPerson() {
 
   const [successMessage, setSuccessMessage] = useState("");
 
-  const [consultants, setConsultants] = useState<string[]>([]);
-
-  useEffect(() => {
-    const getConsultants = async () => {
-      await fetch("http://localhost:3000/api/consultants")
-        .then((res) => res.json())
-        .then((data) => {
-          let consultantsData: string[] = data.map((consultant: any) => {
-            return consultant.firstname + " " + consultant.lastname;
-          });
-          setConsultants(consultantsData);
-        });
-    };
-    getConsultants();
-  }, []);
+  const [consultants] = useFetch("/api/consultants");
 
   const fetchData = async () => {
     let fetchData;
@@ -85,7 +70,8 @@ function AddPerson() {
         ...values,
         role: "student",
         tablename: "students",
-        consultants: studentValues.consultants,
+        consultant1: studentValues.consultant1,
+        consultant2: studentValues.consultant2,
         topic: studentValues.topic,
         financing:
           selectedFinance === "Other"
@@ -137,7 +123,8 @@ function AddPerson() {
       degree: "",
     });
     setStudentValues({
-      consultants: [""],
+      consultant1: null,
+      consultant2: null,
       topic: "",
       financing: "",
       date_of_admission: Date,
@@ -155,7 +142,44 @@ function AddPerson() {
     ) {
       return false;
     }
+    if (
+      role === 1 &&
+      (consultantValues.institution_name === "" ||
+        consultantValues.faculty_name === "" ||
+        consultantValues.department_name === "" ||
+        consultantValues.title === "" ||
+        consultantValues.uni_role === "" ||
+        consultantValues.degree === "")
+    )
+      return false;
+    if (
+      role === 2 ||
+      (role === 3 &&
+        (studentValues.consultant1 === null ||
+          studentValues.topic === "" ||
+          studentValues.financing === "" ||
+          studentValues.date_of_admission === Date))
+    )
+      return false;
     return true;
+  }
+
+  function handleConsultantChange(
+    e: ChangeEvent<HTMLSelectElement>,
+    consultantNumber: number
+  ) {
+    const consultantsArray = consultants as Consultant[];
+    const consultantKey = `consultant${consultantNumber}`;
+
+    const selectedConsultant = consultantsArray.find(
+      (consultant: Consultant) =>
+        consultant.lastname + " " + consultant.firstname === e.target.value
+    );
+
+    setStudentValues({
+      ...studentValues,
+      [consultantKey]: selectedConsultant,
+    });
   }
 
   return (
@@ -274,49 +298,20 @@ function AddPerson() {
 
       {(role === 2 || role === 3) && (
         <div>
-          <div className="flex justify-between">
-            Consultants:
-            <div className="flex">
-              <PlusCircleIcon
-                className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
-                onClick={() => {
-                  if (studentValues.consultants.length > 1) return;
-                  setStudentValues({
-                    ...studentValues,
-                    consultants: [...studentValues.consultants, ""],
-                  });
-                }}
-              />
-              <MinusCircleIcon
-                className="w-10 cursor-pointer hover:text-black transition-all ease-in-out duration-300"
-                onClick={() => {
-                  if (studentValues.consultants.length === 1) return;
-                  let newArray = [...studentValues.consultants];
-                  newArray.pop();
-                  setStudentValues({ ...studentValues, consultants: newArray });
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col items-stretch">
-            {studentValues.consultants.map((consultant, index) => {
-              return (
-                <FormSelectInput
-                  labelContent={`Consultant #${index + 1}`}
-                  options={consultants}
-                  onChange={(e) => {
-                    let newArray = studentValues.consultants;
-                    newArray[index] = e.target.value;
-                    setStudentValues({
-                      ...studentValues,
-                      consultants: newArray,
-                    });
-                  }}
-                />
-              );
+          <FormSelectInput
+            labelContent="Consultant #1"
+            options={consultants.map((consultant: Consultant) => {
+              return consultant.lastname + " " + consultant.firstname;
             })}
-          </div>
+            onChange={(e) => handleConsultantChange(e, 1)}
+          />
+          <FormSelectInput
+            labelContent="Consultant #2 (optional)"
+            options={consultants.map((consultant: Consultant) => {
+              return consultant.lastname + " " + consultant.firstname;
+            })}
+            onChange={(e) => handleConsultantChange(e, 2)}
+          />
           <FormTextInput
             inputPlaceholder="Topic "
             inputType="text"

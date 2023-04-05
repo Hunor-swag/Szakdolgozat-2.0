@@ -11,31 +11,17 @@ import {
 } from "@react-pdf/renderer";
 import { styles } from "./styles-invitation-letter";
 import { getDateString } from "../../../functions/getDateString";
+import { Committee, Exam } from "../../../types/typings";
+
+type Props = {
+  data: Exam;
+  committee: Committee;
+};
 
 Font.register({
   family: "Roboto",
   src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
 });
-
-type Props = {
-  committee_name: string;
-  committee_degree: string;
-  committee_rank: string;
-  committee_university_name: string;
-  committee_department_name: string;
-  where: string;
-  committee_gender: string;
-  student_name: string;
-  student_semester: string;
-  consultant1: string;
-  consultant2: string;
-  commission: Object[];
-  link_to_online_exam: string;
-  exam_date: Date;
-  building: string;
-  room: string;
-  name_of_principal: string;
-};
 
 // Create styles
 
@@ -43,7 +29,7 @@ function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const InvitationLetterGenerator = (props: Props) => {
+const InvitationLetterGenerator = ({ data, committee }: Props) => {
   const date = new Date();
 
   return (
@@ -62,26 +48,32 @@ const InvitationLetterGenerator = (props: Props) => {
         </View>
         <View style={styles.committeeDataContainer}>
           <Text style={{ fontFamily: "Times-Bold" }}>
-            {props.committee_name}, {props.committee_degree}
+            {committee.firstname} {committee.lastname}, {committee.degree}
           </Text>
-          <Text>{props.committee_rank}</Text>
-          <Text>{props.committee_university_name}</Text>
-          <Text>{props.committee_department_name}</Text>
-          <Text>{props.where}</Text>
+          <Text>{committee.uni_role}</Text>
+          <Text>{committee.institution_name}</Text>
+          <Text>{committee.department_name}</Text>
+          <Text>{data.venue === "" ? "Online" : "Helyben"}</Text>
         </View>
         <View style={styles.contentAndTitleContainer}>
           <View style={styles.title}>
             <Text>
-              Tisztelt {capitalizeFirstLetter(props.committee_rank)}{" "}
-              {props.committee_gender === "férfi" ? "Úr" : "Asszony"}!
+              Tisztelt {capitalizeFirstLetter(committee.uni_role)} Asszony/Úr!
+              {"\n"}
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.content}>
-              {props.student_name}, a Pannon Egyetem Informatikai Tudományok
-              Doktori Iskola {props.student_semester}. féléves PhD hallgatója
-              (Témavezetők: {props.consultant1}, {props.consultant2})
-              jelentkezett komplex vizsgára. A komplex vizsgára javasolt
+              {data.student.lastname} {data.student.lastname}, a Pannon Egyetem
+              Informatikai Tudományok Doktori Iskola PhD hallgatója
+              (Témavezető(k): {data.student.consultant1.lastname}{" "}
+              {data.student.consultant1.firstname}
+              {data.student.consultant2 &&
+                ", " +
+                  data.student.consultant2.lastname +
+                  " " +
+                  data.student.consultant2.firstname}
+              ) jelentkezett komplex vizsgára. A komplex vizsgára javasolt
               bizottságot a Doktori Iskola Tanácsa elfogadta. {"\n"}
               A Doktori Iskola Tanácsa javaslatát elfogadva kérdem, hogy az
               alábbiakban részletezett Komplex Vizsga Bizottságba történő
@@ -102,16 +94,11 @@ const InvitationLetterGenerator = (props: Props) => {
             </View>
             <View style={styles.tableColumn2}>
               <Text>
-                {props.commission.map((committee: any) => {
-                  return (
-                    committee.chairman && (
-                      <Text>
-                        {committee.name}, {committee.degree}, {committee.rank},{" "}
-                        {committee.short_university_name}
-                      </Text>
-                    )
-                  );
-                })}
+                <Text>
+                  {data.commission[0].lastname} {data.commission[0].firstname},{" "}
+                  {data.commission[0].degree}, {data.commission[0].uni_role},{" "}
+                  {data.commission[0].short_institution_name}
+                </Text>
               </Text>
             </View>
           </View>
@@ -120,19 +107,27 @@ const InvitationLetterGenerator = (props: Props) => {
               <Text>Vizsgáztatók:</Text>
             </View>
             <View style={styles.tableColumn2}>
-              {props.commission.map((committee: any) => {
-                return (
-                  committee.examiner && (
-                    <Text>
-                      {committee.name}, {committee.degree}, {committee.rank},{" "}
-                      {committee.short_university_name} {"\n"}
-                      {committee.subject} {"\n"}
+              {data.commission.map((committee: Committee, index: number) => {
+                if (committee.main_subj_examiner)
+                  return (
+                    <Text key={index}>
+                      {committee.lastname} {committee.firstname},{" "}
+                      {committee.degree}, {committee.uni_role},{" "}
+                      {committee.short_institution_name} {"\n"}
+                      {data.main_subject} {"\n"}
                     </Text>
-                  )
-                );
+                  );
+                if (committee.other_subj_examiner)
+                  return (
+                    <Text key={index}>
+                      {committee.lastname} {committee.firstname},{" "}
+                      {committee.degree}, {committee.uni_role},{" "}
+                      {committee.short_institution_name} {"\n"}
+                      {data.other_subject} {"\n"}
+                    </Text>
+                  );
               })}
             </View>
-            dsf
           </View>
           <View style={styles.tableRow}>
             <View style={styles.tableColumn1}>
@@ -140,15 +135,19 @@ const InvitationLetterGenerator = (props: Props) => {
             </View>
             <View style={styles.tableColumn2}>
               <Text>
-                {props.commission.map((committee: any) => {
-                  return (
-                    committee.member && (
-                      <Text>
-                        {committee.name}, {committee.degree}, {committee.rank},{" "}
-                        {committee.short_university_name} {"\n"}
+                {data.commission.map((committee: any, index: number) => {
+                  if (
+                    !committee.main_subj_examiner &&
+                    !committee.other_subj_examiner &&
+                    index !== 0
+                  )
+                    return (
+                      <Text key={index}>
+                        {committee.lastname} {committee.firstname},{" "}
+                        {committee.degree}, {committee.uni_role},{" "}
+                        {committee.short_institution_name} {"\n"}
                       </Text>
-                    )
-                  );
+                    );
                 })}
               </Text>
             </View>
@@ -157,19 +156,20 @@ const InvitationLetterGenerator = (props: Props) => {
         <View>
           <Text style={styles.plainText}>
             A komplex vizsgán való részvételt mind személyes, mind online Teams
-            formájában biztosítjuk, utóbbit az alábbi címen:
+            formájában biztosítjuk
+            {/* , utóbbit az alábbi címen: */}
           </Text>
-          <Link src={props.link_to_online_exam}>Link{"\n"}</Link>
+          {/* <Link src={data.link_to_online_exam}>Link{"\n"}</Link>
           <Text style={{ ...styles.plainText, fontFamily: "Times-Bold" }}>
-            A komplex vizsgára {getDateString(props.exam_date)} órai kezdettel
-            az Egyetem {props.building} épületének {props.room} számú termében
-            kerül sor.
-          </Text>
+            A komplex vizsgára {getDateString(data.date)} órai kezdettel az
+            Egyetem {data.building} épületének {data.room} számú termében kerül
+            sor.
+          </Text> */}
           <Text style={styles.plainText}>
             Veszprém, {getDateString(new Date("January 12, 2023 13:00"))}.
           </Text>
           <View style={styles.signatureContainer}>
-            <Text>{props.name_of_principal}</Text>
+            <Text>Dr. Hartung Ferenc</Text>
             <Text>a Doktori Iskola vezetője</Text>
           </View>
         </View>
