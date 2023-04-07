@@ -47,16 +47,20 @@ function InvitationLetter() {
           Generate
         </button>
       </form>
-      {showCode && selectedExam && (
-        <div className="w-full">
-          <PDFViewer className="w-1/2 h-screen m-2">
-            <InvitationLetterGenerator
-              data={selectedExam}
-              committee={selectedExam.commission[0]}
-            />
-          </PDFViewer>
-        </div>
-      )}
+      <div className="w-full flex justify-center flex-row flex-wrap">
+        {showCode &&
+          selectedExam &&
+          selectedExam.commission.map((committee: Committee, index: number) => {
+            return (
+              <PDFViewer className="w-1/2 h-full m-2">
+                <InvitationLetterGenerator
+                  data={selectedExam}
+                  committee={selectedExam.commission[index]}
+                />
+              </PDFViewer>
+            );
+          })}
+      </div>
     </div>
   );
 }
