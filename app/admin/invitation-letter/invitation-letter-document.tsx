@@ -14,7 +14,7 @@ import { getDateString } from "../../../functions/getDateString";
 import { Committee, Exam } from "../../../types/typings";
 
 type Props = {
-  data: Exam;
+  exam: Exam;
   committee: Committee;
 };
 
@@ -29,9 +29,9 @@ function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const InvitationLetterGenerator = ({ data, committee }: Props) => {
+const InvitationLetterDocument = ({ exam, committee }: Props) => {
   const date = new Date();
-
+  console.log(exam.student.consultant2);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -53,7 +53,7 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
           <Text>{committee.uni_role}</Text>
           <Text>{committee.institution_name}</Text>
           <Text>{committee.department_name}</Text>
-          <Text>{data.venue === "" ? "Online" : "Helyben"}</Text>
+          <Text>{exam.venue === "" ? "Online" : "Helyben"}</Text>
         </View>
         <View style={styles.contentAndTitleContainer}>
           <View style={styles.title}>
@@ -64,15 +64,15 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.content}>
-              {data.student.lastname} {data.student.lastname}, a Pannon Egyetem
+              {exam.student.lastname} {exam.student.lastname}, a Pannon Egyetem
               Informatikai Tudományok Doktori Iskola PhD hallgatója
-              (Témavezető(k): {data.student.consultant1.lastname}{" "}
-              {data.student.consultant1.firstname}
-              {data.student.consultant2 &&
+              (Témavezető(k): {exam.student.consultant1.lastname}{" "}
+              {exam.student.consultant1.firstname}
+              {exam.student.consultant2 &&
                 ", " +
-                  data.student.consultant2.lastname +
+                  exam.student.consultant2.lastname +
                   " " +
-                  data.student.consultant2.firstname}
+                  exam.student.consultant2.firstname}
               ) jelentkezett komplex vizsgára. A komplex vizsgára javasolt
               bizottságot a Doktori Iskola Tanácsa elfogadta. {"\n"}
               A Doktori Iskola Tanácsa javaslatát elfogadva kérdem, hogy az
@@ -95,9 +95,9 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
             <View style={styles.tableColumn2}>
               <Text>
                 <Text>
-                  {data.commission[0].lastname} {data.commission[0].firstname},{" "}
-                  {data.commission[0].degree}, {data.commission[0].uni_role},{" "}
-                  {data.commission[0].short_institution_name}
+                  {exam.commission[0].lastname} {exam.commission[0].firstname},{" "}
+                  {exam.commission[0].degree}, {exam.commission[0].uni_role},{" "}
+                  {exam.commission[0].short_institution_name}
                 </Text>
               </Text>
             </View>
@@ -107,14 +107,14 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
               <Text>Vizsgáztatók:</Text>
             </View>
             <View style={styles.tableColumn2}>
-              {data.commission.map((committee: Committee, index: number) => {
+              {exam.commission.map((committee: Committee, index: number) => {
                 if (committee.main_subj_examiner)
                   return (
                     <Text key={index}>
                       {committee.lastname} {committee.firstname},{" "}
                       {committee.degree}, {committee.uni_role},{" "}
                       {committee.short_institution_name} {"\n"}
-                      {data.main_subject} {"\n"}
+                      {exam.main_subject} {"\n"}
                     </Text>
                   );
                 if (committee.other_subj_examiner)
@@ -123,7 +123,7 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
                       {committee.lastname} {committee.firstname},{" "}
                       {committee.degree}, {committee.uni_role},{" "}
                       {committee.short_institution_name} {"\n"}
-                      {data.other_subject} {"\n"}
+                      {exam.other_subject} {"\n"}
                     </Text>
                   );
               })}
@@ -135,7 +135,7 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
             </View>
             <View style={styles.tableColumn2}>
               <Text>
-                {data.commission.map((committee: any, index: number) => {
+                {exam.commission.map((committee: any, index: number) => {
                   if (
                     !committee.main_subj_examiner &&
                     !committee.other_subj_examiner &&
@@ -190,4 +190,4 @@ const InvitationLetterGenerator = ({ data, committee }: Props) => {
   );
 };
 
-export default InvitationLetterGenerator;
+export default InvitationLetterDocument;

@@ -26,9 +26,13 @@ function Exam() {
   const [selectedMainSubject, setSelectedMainSubject] = useState(-1);
   const [selectedOtherSubject, setSelectedOtherSubject] = useState(-1);
 
-  const [students] = useFetch("http://localhost:3000/api/students");
+  const { data: students, error: studentsError } = useFetch(
+    "http://localhost:3000/api/students"
+  );
 
-  const [committees] = useFetch("http://localhost:3000/api/committees");
+  const { data: committees, error: committeesError } = useFetch(
+    "http://localhost:3000/api/committees"
+  );
 
   const [commission, setCommission] = useState([
     {
@@ -44,7 +48,7 @@ function Exam() {
     },
   ]);
 
-  const [subjects] = useFetch("../subjects.json");
+  const { data: subjects, error: subjectsError } = useFetch("../subjects.json");
 
   const handleCommitteeChange = (
     e: ChangeEvent<HTMLSelectElement>,
@@ -72,17 +76,6 @@ function Exam() {
         break;
       }
     }
-    // newArray[index] = {
-    //   firstname: committeeData?.firstname,
-    //   lastname: committeeData?.lastname,
-    //   uni_role: committeeData?.uni_role,
-    //   degree: committeeData?.degree,
-    //   institution_name: committeeData?.institution_name,
-    //   short_institution_name: committeeData?.short_institution_name,
-    //   department_name: committeeData?.department_name,
-    //   main_subj_examiner: false,
-    //   other_subj_examiner: false,
-    // };
     setCommission(newArray);
   };
 
@@ -127,7 +120,7 @@ function Exam() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setSuccessMessage("Személy sikeresen hozzáadva!");
+        setSuccessMessage("Vizsga sikeresen hozzáadva!");
         setTimeout(() => {
           setSuccessMessage("");
         }, 5000);

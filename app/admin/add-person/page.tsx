@@ -36,6 +36,15 @@ function AddPerson() {
 
   const [selectedFinance, setSelectedFinance] = useState("");
 
+  useEffect(() => {
+    setStudentValues((prevState) => {
+      return {
+        ...prevState,
+        financing: selectedFinance,
+      };
+    });
+  }, [selectedFinance]);
+
   const [studentValues, setStudentValues] = useState({
     consultant1: {} as Consultant | null | undefined,
     consultant2: {} as Consultant | null | undefined,
@@ -48,7 +57,11 @@ function AddPerson() {
 
   const [successMessage, setSuccessMessage] = useState("");
 
-  const [consultants] = useFetch("/api/consultants");
+  const { data: consultants, error } = useFetch("/api/consultants");
+
+  if (error) {
+    return <div>Failed to load</div>;
+  }
 
   const fetchData = async () => {
     let fetchData;
@@ -71,7 +84,9 @@ function AddPerson() {
         role: "student",
         tablename: "students",
         consultant1: studentValues.consultant1,
-        consultant2: studentValues.consultant2,
+        consultant2: studentValues.consultant2
+          ? studentValues.consultant2
+          : null,
         topic: studentValues.topic,
         financing:
           selectedFinance === "Other"
@@ -99,6 +114,10 @@ function AddPerson() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(role);
+    console.log(values);
+    console.log(studentValues);
+    console.log(selectedFinance);
     if (!validateForm()) {
       setErrorMessage("Minden mező kitöltése kötelező!");
       setTimeout(() => {
@@ -107,7 +126,7 @@ function AddPerson() {
       return;
     }
 
-    fetchData();
+    await fetchData();
 
     resetForm();
   };
@@ -153,12 +172,10 @@ function AddPerson() {
     )
       return false;
     if (
-      role === 2 ||
-      (role === 3 &&
-        (studentValues.consultant1 === null ||
-          studentValues.topic === "" ||
-          studentValues.financing === "" ||
-          studentValues.date_of_admission === Date))
+      (role === 2 || role === 3) &&
+      (studentValues.consultant1 === null ||
+        studentValues.topic === "" ||
+        studentValues.financing === "")
     )
       return false;
     return true;

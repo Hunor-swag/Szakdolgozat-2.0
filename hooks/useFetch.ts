@@ -1,21 +1,27 @@
-import { error } from "console";
-import Error from "next/error";
 import { useState, useEffect } from "react";
 
 export const useFetch = (url: string) => {
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(url);
-      const data = await response.json();
-      setData(data);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const jsonData = text ? JSON.parse(text) : null;
+        setData(jsonData);
+      } catch (error: any) {
+        console.log(error.message);
+        setError(error);
+      }
     };
 
-    fetchData()
-      .then()
-      .catch((error) => console.log(error));
+    fetchData();
   }, [url]);
 
-  return [data];
+  return { data, error };
 };
