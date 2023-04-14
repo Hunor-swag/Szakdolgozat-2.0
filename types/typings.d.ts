@@ -8,6 +8,7 @@ export type Committee = {
   department_name: string;
   main_subj_examiner: boolean;
   other_subj_examiner: boolean;
+  gender: string;
 };
 
 export type Exam = {

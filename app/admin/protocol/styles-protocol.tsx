@@ -55,4 +55,68 @@ export const styles = StyleSheet.create({
   dotlines: {
     marginTop: 4,
   },
+  commission_decision_title: {
+    fontFamily: "Garamond-Bold",
+    fontSize: 14,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  table: {
+    width: "100%",
+    marginTop: 30,
+    marginBottom: 30,
+    borderTop: "1px solid black",
+    borderRight: "1px solid black",
+  },
+  tableRow: {
+    display: "flex",
+    flexDirection: "row",
+    borderBottom: "1px solid black",
+  },
+  tableTextCell: {
+    width: "40%",
+    padding: 5,
+    fontSize: 10,
+    borderLeft: "1px solid black",
+    borderCollapse: "collapse",
+  },
+  tableEmptyCell: {
+    width: "10%",
+    padding: 5,
+    fontSize: 10,
+    borderLeft: "1px solid black",
+    borderCollapse: "collapse",
+  },
+
+  tableCellHeader: {
+    padding: 5,
+    fontSize: 12,
+    borderLeft: "1px solid black",
+    paddingBottom: 15,
+  },
+
+  classification_container: {},
+
+  classification_center: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 15,
+  },
+
+  classification_around: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 10,
+    marginBottom: 15,
+  },
+
+  classification_column_center: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
