@@ -16,16 +16,9 @@ export const faculty_names = [
   "Modern Filológiai és Társadalomtudományi Kar",
 ];
 
-export const uni_roles = [
-  "Docens",
-  "Egyetemi tanár",
-  "Dékán",
-  "Rektor",
-  "Dékánhelyettes",
-  "Rektorhelyettes",
-];
+export const uni_roles = ["Docens", "Professzor"];
 
-export const degree_types = ["-", "PhD", "DSc"];
+export const degree_types = ["PhD", "DSc"];
 
 export const consultants = [
   "Dulai Tibor",

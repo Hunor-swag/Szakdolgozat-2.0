@@ -1,5 +1,5 @@
-import { greet } from "../../../functions/greet";
-import { Committee, Exam } from "../../../types/typings";
+import { greet } from "../../../../functions/greet";
+import { Committee, Exam } from "../../../../types/typings";
 
 export default function generateText(exam: Exam, committee: Committee) {
   const chairman = exam.commission[0];

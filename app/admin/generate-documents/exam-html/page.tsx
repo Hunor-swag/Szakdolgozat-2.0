@@ -2,9 +2,9 @@
 
 import { saveAs } from "file-saver";
 import React, { ChangeEvent, useState } from "react";
-import { FormSelectInput } from "../../../components/FormSelectInput";
-import { useFetch } from "../../../hooks/useFetch";
-import { Exam } from "../../../types/typings";
+import { FormSelectInput } from "../../../../components/FormSelectInput";
+import { useFetch } from "../../../../hooks/useFetch";
+import { Exam } from "../../../../types/typings";
 import generateHtml from "./generateHtml";
 
 function ExamHtml() {

@@ -1,9 +1,9 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
-import { FormSelectInput } from "../../../components/FormSelectInput";
-import { useFetch } from "../../../hooks/useFetch";
-import { Committee, Exam } from "../../../types/typings";
+import { FormSelectInput } from "../../../../components/FormSelectInput";
+import { useFetch } from "../../../../hooks/useFetch";
+import { Committee, Exam } from "../../../../types/typings";
 import { saveAs } from "file-saver";
 import generateText from "./generateText";
 

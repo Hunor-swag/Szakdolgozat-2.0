@@ -159,14 +159,14 @@ const InvitationLetterDocument = ({ exam, committee }: Props) => {
             formájában biztosítjuk
             {/* , utóbbit az alábbi címen: */}
           </Text>
-          {/* <Link src={data.link_to_online_exam}>Link{"\n"}</Link>
+          <Link src={exam.link}>Link{"\n"}</Link>
           <Text style={{ ...styles.plainText, fontFamily: "Times-Bold" }}>
-            A komplex vizsgára {getDateString(data.date)} órai kezdettel az
-            Egyetem {data.building} épületének {data.room} számú termében kerül
-            sor.
-          </Text> */}
+            A komplex vizsgára {getDateString(new Date(exam.date), true)} órai
+            kezdettel az Egyetem {exam.building} épületének {exam.room} számú
+            termében kerül sor.
+          </Text>
           <Text style={styles.plainText}>
-            Veszprém, {getDateString(new Date("January 12, 2023 13:00"))}.
+            Veszprém, {getDateString(new Date(Date.now()), false)}
           </Text>
           <View style={styles.signatureContainer}>
             <Text>Dr. Hartung Ferenc</Text>

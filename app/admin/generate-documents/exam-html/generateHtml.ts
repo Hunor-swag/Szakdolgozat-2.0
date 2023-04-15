@@ -1,7 +1,7 @@
 "use client";
 
-import { useFetch } from "../../../hooks/useFetch";
-import { Committee, Exam } from "../../../types/typings";
+import { useFetch } from "../../../../hooks/useFetch";
+import { Committee, Exam } from "../../../../types/typings";
 
 function generateHtml(exam: Exam) {
   const chairman = exam.commission[0];

@@ -17,6 +17,7 @@ function AddCommittee() {
   const [values, setValues] = useState({
     firstname: "",
     lastname: "",
+    gender: "",
     institution_name: "",
     department_name: "",
     uni_role: "",
@@ -34,8 +35,7 @@ function AddCommittee() {
       values.lastname === "" ||
       values.institution_name === "" ||
       values.department_name === "" ||
-      values.uni_role === "" ||
-      values.degree === ""
+      values.uni_role === ""
     ) {
       displayMessage("Minden mező kitöltése kötelező!", "text-red-500");
       return false;
@@ -47,6 +47,7 @@ function AddCommittee() {
     setValues({
       firstname: "",
       lastname: "",
+      gender: "",
       institution_name: "",
       department_name: "",
       uni_role: "",
@@ -107,6 +108,12 @@ function AddCommittee() {
           inputPlaceholder="Last name"
           inputValue={values.lastname}
           onChange={(e) => setValues({ ...values, lastname: e.target.value })}
+        />
+        <FormSelectInput
+          labelContent="Gender"
+          options={["nő", "férfi"]}
+          value={values.gender}
+          onChange={(e) => setValues({ ...values, gender: e.target.value })}
         />
         <FormSelectInput
           labelContent="Name of institution"

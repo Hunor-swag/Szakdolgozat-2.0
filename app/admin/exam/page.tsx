@@ -6,6 +6,7 @@ import { FormTextInput } from "../../../components/FormTextInput";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { useFetch } from "../../../hooks/useFetch";
 import { Committee, Student } from "../../../types/typings";
+import DatePickerWithTime from "../../../components/DatePickerWithTime";
 
 // Csak egy melléktárgy
 // bizottságnál 2. taggal kezdődjön
@@ -13,8 +14,9 @@ import { Committee, Student } from "../../../types/typings";
 function Exam() {
   const [values, setValues] = useState({
     student: {} as Student | undefined,
-    date: "",
+    date: new Date(Date.now()),
     venue: "",
+    link: "",
     main_subject: "",
     other_subject: "",
   });
@@ -49,6 +51,12 @@ function Exam() {
   ]);
 
   const { data: subjects, error: subjectsError } = useFetch("../subjects.json");
+
+  const handleDateChange = (date: Date) => {
+    setValues((prevValues) => {
+      return { ...prevValues, date: date };
+    });
+  };
 
   const handleCommitteeChange = (
     e: ChangeEvent<HTMLSelectElement>,
@@ -101,10 +109,14 @@ function Exam() {
         values.student?.lastname + " " + values.student?.firstname
     );
 
+    const [building, room] = values.venue.split(".");
+
     const body = JSON.stringify({
       student: student,
-      date: "2021-05-05",
+      date: values.date,
       venue: values.venue,
+      building: building,
+      room: room,
       main_subject: values.main_subject,
       other_subject: values.other_subject,
       commission: commission,
@@ -164,8 +176,9 @@ function Exam() {
     setSelectedOtherSubject(-1);
     setValues({
       student: {} as Student,
-      date: "",
+      date: new Date(Date.now()),
       venue: "",
+      link: "",
       main_subject: "",
       other_subject: "",
     });
@@ -216,13 +229,28 @@ function Exam() {
         })}
       />
 
-      {/* Datepicker here */}
+      <DatePickerWithTime
+        label="Vizsgaidőpont"
+        selectedDate={values.date}
+        handleDateChange={handleDateChange}
+      />
 
       <FormTextInput
-        inputPlaceholder="Helyszín"
+        inputPlaceholder="Helyszín (pl. I.317)"
         inputType="text"
         inputValue={values.venue}
         onChange={(e) => setValues({ ...values, venue: e.target.value })}
+      />
+
+      <FormTextInput
+        inputPlaceholder="Link az online részvételhez"
+        inputType="text"
+        inputValue={values.link}
+        onChange={(e) =>
+          setValues((prevValues) => {
+            return { ...prevValues, link: e.target.value };
+          })
+        }
       />
 
       <FormSelectInput
@@ -246,7 +274,7 @@ function Exam() {
       />
       <div className="flex flex-col">
         <h1 className="text-center text-xl mt-5">Bizottság:</h1>
-        <table className="text-center w-full border-separate border-spacing-x-5 ">
+        <table className="text-center w-full border-separate border-spacing-x-5">
           <thead>
             <tr>
               <td className="flex">

@@ -18,6 +18,9 @@ export type Exam = {
   other_subject: string;
   student: Student;
   venue: string;
+  building: string;
+  room: string;
+  link: string;
 };
 
 export type Student = {

@@ -8,10 +8,7 @@ const Header = () => {
       <HeaderItem text="Exam" href="/admin/exam" />
       <HeaderItem text="Add committee" href="/admin/add-committee" />
       <HeaderItem text="Edit permissions" href="/admin/edit-permissions" />
-      <HeaderItem
-        text="Generate invitation letters"
-        href="/admin/invitation-letter"
-      />
+      <HeaderItem text="Generate documents" href="/admin/generate-documents" />
 
       <Signout />
     </header>

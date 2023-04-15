@@ -2,6 +2,7 @@
 
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { FormEvent, MouseEvent, useState, useEffect, ChangeEvent } from "react";
+import CustomDatePicker from "../../../components/CustomDatePicker";
 import { FormRadioInput } from "../../../components/FormRadioInput";
 import { FormSelectInput } from "../../../components/FormSelectInput";
 import { FormTextInput } from "../../../components/FormTextInput";
@@ -46,11 +47,12 @@ function AddPerson() {
   }, [selectedFinance]);
 
   const [studentValues, setStudentValues] = useState({
+    birth_date: new Date(Date.now()),
     consultant1: {} as Consultant | null | undefined,
     consultant2: {} as Consultant | null | undefined,
     topic: "",
     financing: "",
-    date_of_admission: Date,
+    date_of_admission: new Date(Date.now()),
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -63,11 +65,21 @@ function AddPerson() {
     return <div>Failed to load</div>;
   }
 
+  const handleBirthDateChange = (date: Date, name: string) => {
+    setStudentValues((prevStudentValues) => {
+      return {
+        ...prevStudentValues,
+        [name]: date,
+      };
+    });
+  };
+
   const fetchData = async () => {
     let fetchData;
     if (role === 1) {
       fetchData = {
         ...values,
+        name: values.firstname + " " + values.lastname,
         tablename: "consultants",
         role: "consultant",
         institution_name: consultantValues.institution_name,
@@ -81,8 +93,10 @@ function AddPerson() {
     if (role === 2 || role === 3) {
       fetchData = {
         ...values,
+        name: values.lastname + " " + values.firstname,
         role: "student",
         tablename: "students",
+        birth_date: studentValues.birth_date,
         consultant1: studentValues.consultant1,
         consultant2: studentValues.consultant2
           ? studentValues.consultant2
@@ -142,11 +156,12 @@ function AddPerson() {
       degree: "",
     });
     setStudentValues({
+      birth_date: new Date(Date.now()),
       consultant1: null,
       consultant2: null,
       topic: "",
       financing: "",
-      date_of_admission: Date,
+      date_of_admission: new Date(Date.now()),
     });
     setRole(0);
     setSelectedFinance("");
@@ -171,9 +186,12 @@ function AddPerson() {
         consultantValues.degree === "")
     )
       return false;
+    const today = new Date(Date.now());
     if (
       (role === 2 || role === 3) &&
       (studentValues.consultant1 === null ||
+        studentValues.birth_date.getTime() > today.getTime() ||
+        studentValues.date_of_admission.getTime() > today.getTime() ||
         studentValues.topic === "" ||
         studentValues.financing === "")
     )
@@ -315,6 +333,13 @@ function AddPerson() {
 
       {(role === 2 || role === 3) && (
         <div>
+          <CustomDatePicker
+            selectedDate={studentValues.birth_date}
+            handleDateChange={(date: Date) =>
+              handleBirthDateChange(date, "birth_date")
+            }
+            label="Birth date:"
+          />
           <FormSelectInput
             labelContent="Consultant #1"
             options={consultants.map((consultant: Consultant) => {
@@ -329,6 +354,13 @@ function AddPerson() {
             })}
             onChange={(e) => handleConsultantChange(e, 2)}
           />
+          <CustomDatePicker
+            selectedDate={studentValues.date_of_admission}
+            handleDateChange={(date: Date) =>
+              handleBirthDateChange(date, "date_of_admission")
+            }
+            label="Date of admission:"
+          />
           <FormTextInput
             inputPlaceholder="Topic "
             inputType="text"
@@ -337,6 +369,7 @@ function AddPerson() {
               setStudentValues({ ...studentValues, topic: e.target.value })
             }
           />
+
           <div className="my-2 text-center">
             <label>Financing method</label>
             <div className="flex flex-row justify-around flex-wrap">
