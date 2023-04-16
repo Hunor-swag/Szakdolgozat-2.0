@@ -9,7 +9,7 @@ const Signout = () => {
         className="btn bg-red-500 hover:bg-red-400"
         onClick={() => signOut()}
       >
-        Signout
+        Kijelentkezés
       </button>
     </div>
   );

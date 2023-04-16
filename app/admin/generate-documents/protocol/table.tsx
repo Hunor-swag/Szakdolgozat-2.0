@@ -14,7 +14,7 @@ function ResultsTable() {
     let rows = [];
     for (let i = numOfRows; i >= 0; i--) {
       const row = (
-        <View style={styles.tableRow}>
+        <View key={i} style={styles.tableRow}>
           <View style={styles.tableTextCell}>
             <Text>{i} pontot adott</Text>
           </View>

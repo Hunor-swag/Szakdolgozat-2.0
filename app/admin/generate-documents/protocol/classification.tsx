@@ -1,5 +1,5 @@
 import { Text, View } from "@react-pdf/renderer";
-import { Exam } from "../../../types/typings";
+import { Exam } from "../../../../types/typings";
 import { styles } from "./styles-protocol";
 
 function Classification({ exam }: { exam: Exam }) {
@@ -28,7 +28,11 @@ function Classification({ exam }: { exam: Exam }) {
           <Text>.........................................</Text>
           {exam.commission.map((person, index) => {
             if (person.main_subj_examiner) {
-              return <Text>{`${person.lastname} ${person.firstname}`}</Text>;
+              return (
+                <Text
+                  key={index}
+                >{`${person.lastname} ${person.firstname}`}</Text>
+              );
             }
           })}
           <Text>a főtárgy vizsgáztatója</Text>
@@ -37,7 +41,11 @@ function Classification({ exam }: { exam: Exam }) {
           <Text>.........................................</Text>
           {exam.commission.map((person, index) => {
             if (person.other_subj_examiner) {
-              return <Text>{`${person.lastname} ${person.firstname}`}</Text>;
+              return (
+                <Text
+                  key={index}
+                >{`${person.lastname} ${person.firstname}`}</Text>
+              );
             }
           })}
           <Text>a melléktárgy vizsgáztatója</Text>
@@ -51,7 +59,7 @@ function Classification({ exam }: { exam: Exam }) {
             !person.other_subj_examiner
           ) {
             return (
-              <View style={styles.classification_column_center}>
+              <View key={index} style={styles.classification_column_center}>
                 <Text>.........................................</Text>
                 <Text>{`${person.lastname} ${person.firstname} - tag`}</Text>
               </View>

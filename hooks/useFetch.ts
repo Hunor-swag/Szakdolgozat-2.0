@@ -7,7 +7,7 @@ export const useFetch = (url: string) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

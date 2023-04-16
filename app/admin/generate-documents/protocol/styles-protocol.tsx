@@ -119,4 +119,5 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  commission_content: {},
 });

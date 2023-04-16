@@ -8,9 +8,9 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import { styles } from "./styles-protocol";
-import EBGaramondRegular from "../../../public/fonts/EBGaramond-Regular.ttf";
-import EBGaramondBold from "../../../public/fonts/EBGaramond-Bold.ttf";
-import { Committee, Consultant, Exam } from "../../../types/typings";
+import EBGaramondRegular from "../../../../public/fonts/EBGaramond-Regular.ttf";
+import EBGaramondBold from "../../../../public/fonts/EBGaramond-Bold.ttf";
+import { Committee, Consultant, Exam } from "../../../../types/typings";
 import ResultsTable from "./table";
 import Page1 from "./page1";
 import Page2 from "./page2";

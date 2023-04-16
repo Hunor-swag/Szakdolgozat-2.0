@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { FormSelectInput } from "../../../components/FormSelectInput";
 import { FormTextInput } from "../../../components/FormTextInput";
 
@@ -11,14 +11,14 @@ import {
   uni_roles,
 } from "../../../constants";
 
-// bizottsági tagoknak több mező (lásd a személy hozzáadásánál)
-
 function AddCommittee() {
   const [values, setValues] = useState({
     firstname: "",
     lastname: "",
+    name: "",
     gender: "",
     institution_name: "",
+    short_institution_name: "",
     department_name: "",
     uni_role: "",
     degree: "",
@@ -47,8 +47,10 @@ function AddCommittee() {
     setValues({
       firstname: "",
       lastname: "",
+      name: "",
       gender: "",
       institution_name: "",
+      short_institution_name: "",
       department_name: "",
       uni_role: "",
       degree: "",
@@ -65,7 +67,14 @@ function AddCommittee() {
   const sendData = async () => {
     if (!validateForm()) return;
 
-    const fetchData = { ...values };
+    let name = "";
+    if (values.degree === "") {
+      name = `${values.lastname} ${values.firstname}`;
+    } else {
+      name = `Dr. ${values.lastname} ${values.firstname}`;
+    }
+
+    const fetchData = { ...values, name: name };
 
     await fetch("http://localhost:3000/api/addCommittee", {
       method: "POST",
@@ -96,35 +105,43 @@ function AddCommittee() {
   return (
     <div className="flex w-full justify-center">
       <form onSubmit={handleSubmit} className="lg:w-1/3 md:w-3/4 flex flex-col">
-        <h1 className="text-center text-3xl my-5">Add committee</h1>
+        <h1 className="text-center text-3xl my-5">Bizottsági tag bevitele</h1>
         <FormTextInput
           inputType="text"
-          inputPlaceholder="First name"
-          inputValue={values.firstname}
-          onChange={(e) => setValues({ ...values, firstname: e.target.value })}
-        />
-        <FormTextInput
-          inputType="text"
-          inputPlaceholder="Last name"
+          inputPlaceholder="Vezetéknév"
           inputValue={values.lastname}
           onChange={(e) => setValues({ ...values, lastname: e.target.value })}
         />
+        <FormTextInput
+          inputType="text"
+          inputPlaceholder="Keresztnév"
+          inputValue={values.firstname}
+          onChange={(e) => setValues({ ...values, firstname: e.target.value })}
+        />
         <FormSelectInput
-          labelContent="Gender"
+          labelContent="Nem"
           options={["nő", "férfi"]}
           value={values.gender}
           onChange={(e) => setValues({ ...values, gender: e.target.value })}
         />
         <FormSelectInput
-          labelContent="Name of institution"
+          labelContent="Intézmény neve"
           options={institution_names}
           value={values.institution_name}
           onChange={(e) =>
             setValues({ ...values, institution_name: e.target.value })
           }
         />
+        <FormTextInput
+          inputType="text"
+          inputPlaceholder="Intézmény rövid neve"
+          inputValue={values.short_institution_name}
+          onChange={(e) =>
+            setValues({ ...values, short_institution_name: e.target.value })
+          }
+        />
         <FormSelectInput
-          labelContent="Name of department"
+          labelContent="Tanszék neve"
           options={department_names}
           value={values.department_name}
           onChange={(e) =>
@@ -132,13 +149,13 @@ function AddCommittee() {
           }
         />
         <FormSelectInput
-          labelContent="Rank"
+          labelContent="Beosztás"
           options={uni_roles}
           value={values.uni_role}
           onChange={(e) => setValues({ ...values, uni_role: e.target.value })}
         />
         <FormSelectInput
-          labelContent="Degree"
+          labelContent="Tudományos fokozat"
           options={degree_types}
           value={values.degree}
           onChange={(e) => setValues({ ...values, degree: e.target.value })}
@@ -146,7 +163,7 @@ function AddCommittee() {
 
         <div className={`text-semibold ${message?.color}`}>{message.msg}</div>
         <button className="btn" type="submit">
-          Submit
+          Hozzáadás
         </button>
       </form>
     </div>

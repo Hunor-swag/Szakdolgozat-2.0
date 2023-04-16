@@ -17,6 +17,7 @@ function Exam() {
     date: new Date(Date.now()),
     venue: "",
     link: "",
+    faculty_writer: "",
     main_subject: "",
     other_subject: "",
   });
@@ -31,7 +32,7 @@ function Exam() {
   const { data: students, error: studentsError } = useFetch(
     "http://localhost:3000/api/students"
   );
-
+  console.log(students);
   const { data: committees, error: committeesError } = useFetch(
     "http://localhost:3000/api/committees"
   );
@@ -40,6 +41,7 @@ function Exam() {
     {
       firstname: "",
       lastname: "",
+      name: "",
       uni_role: "",
       degree: "",
       institution_name: "",
@@ -66,13 +68,11 @@ function Exam() {
 
     for (let i = 0; i < committees.length; i++) {
       const committeesArray = committees as Committee[];
-      if (
-        committeesArray[i].lastname + " " + committeesArray[i].firstname ===
-        e.target.value
-      ) {
+      if (committeesArray[i].name === e.target.value) {
         newArray[index] = {
           firstname: committeesArray[i].firstname,
           lastname: committeesArray[i].lastname,
+          name: committeesArray[i].name,
           uni_role: committeesArray[i].uni_role,
           degree: committeesArray[i].degree,
           institution_name: committeesArray[i].institution_name,
@@ -117,6 +117,7 @@ function Exam() {
       venue: values.venue,
       building: building,
       room: room,
+      link: values.link,
       main_subject: values.main_subject,
       other_subject: values.other_subject,
       commission: commission,
@@ -163,6 +164,7 @@ function Exam() {
       {
         firstname: "",
         lastname: "",
+        name: "",
         degree: "",
         uni_role: "",
         institution_name: "",
@@ -181,6 +183,7 @@ function Exam() {
       link: "",
       main_subject: "",
       other_subject: "",
+      faculty_writer: "",
     });
   }
 
@@ -287,6 +290,7 @@ function Exam() {
                         {
                           firstname: "",
                           lastname: "",
+                          name: "",
                           uni_role: "",
                           degree: "",
                           institution_name: "",
@@ -319,10 +323,10 @@ function Exam() {
                   <td className="flex items-center" key={index + "name"}>
                     {index === 0 ? <p>Elnök</p> : <p>{index + 1}. tag</p>}
                     <FormSelectInput
-                      value={committee.lastname + " " + committee.firstname}
+                      value={committee.name}
                       labelContent=""
                       options={committees.map((committee: any) => {
-                        return committee.lastname + " " + committee.firstname;
+                        return committee.name;
                       })}
                       onChange={(e) => {
                         handleCommitteeChange(e, index);
@@ -350,10 +354,20 @@ function Exam() {
             })}
           </tbody>
         </table>
+        <FormTextInput
+          inputPlaceholder="Jegyzőkönyvvezető neve"
+          inputType="text"
+          inputValue={values.faculty_writer}
+          onChange={(e) =>
+            setValues((prevValues) => {
+              return { ...prevValues, faculty_writer: e.target.value };
+            })
+          }
+        />
         <div className="text-red-600 font-bold">{errorMessage}</div>
         <div className="text-green-600 font-bold">{successMessage}</div>
         <button className="btn bg-green-600 hover:bg-green-500" type="submit">
-          Submit
+          Hozzáadás
         </button>
       </div>
     </form>

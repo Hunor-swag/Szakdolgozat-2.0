@@ -52,6 +52,7 @@ function AddPerson() {
     consultant2: {} as Consultant | null | undefined,
     topic: "",
     financing: "",
+    faculty: "",
     date_of_admission: new Date(Date.now()),
   });
 
@@ -61,9 +62,9 @@ function AddPerson() {
 
   const { data: consultants, error } = useFetch("/api/consultants");
 
-  if (error) {
-    return <div>Failed to load</div>;
-  }
+  // if (error) {
+  //   return <div>Hiba történt az oldal betöltésekor</div>;
+  // }
 
   const handleBirthDateChange = (date: Date, name: string) => {
     setStudentValues((prevStudentValues) => {
@@ -79,7 +80,10 @@ function AddPerson() {
     if (role === 1) {
       fetchData = {
         ...values,
-        name: values.firstname + " " + values.lastname,
+        name:
+          consultantValues.degree === ""
+            ? values.firstname + " " + values.lastname
+            : "Dr. " + values.lastname + " " + values.firstname,
         tablename: "consultants",
         role: "consultant",
         institution_name: consultantValues.institution_name,
@@ -102,6 +106,7 @@ function AddPerson() {
           ? studentValues.consultant2
           : null,
         topic: studentValues.topic,
+        faculty_name: studentValues.faculty,
         financing:
           selectedFinance === "Other"
             ? studentValues.financing
@@ -161,6 +166,7 @@ function AddPerson() {
       consultant2: null,
       topic: "",
       financing: "",
+      faculty: "",
       date_of_admission: new Date(Date.now()),
     });
     setRole(0);
@@ -181,7 +187,7 @@ function AddPerson() {
       (consultantValues.institution_name === "" ||
         consultantValues.faculty_name === "" ||
         consultantValues.department_name === "" ||
-        consultantValues.title === "" ||
+        // consultantValues.title === "" ||
         consultantValues.uni_role === "" ||
         consultantValues.degree === "")
     )
@@ -222,44 +228,48 @@ function AddPerson() {
       onSubmit={handleSubmit}
       className="flex flex-col p-5 lg:w-1/2 md:w-3/4 sm:w-full"
     >
-      <h1 className="mb-10 text-5xl text-center">Add person</h1>
+      <h1 className="mb-10 text-5xl text-center">Személy hozzáadása</h1>
       <div className="flex flex-row justify-between">
         <FormRadioInput
-          labelContent="Consultant/Teacher"
+          labelContent="Témavezető/oktató"
           name="role"
           border={true}
           checked={role === 1}
           onClick={(e) => setRole(1)}
         />
-        <FormRadioInput
-          labelContent="Student"
-          name="role"
-          border={true}
-          checked={role === 2}
-          onClick={(e) => setRole(2)}
-        />
-        <FormRadioInput
-          labelContent="Student (Individual preparation)"
-          name="role"
-          border={true}
-          checked={role === 3}
-          onClick={(e) => setRole(3)}
-        />
+        {!error && (
+          <>
+            <FormRadioInput
+              labelContent="Hallgató"
+              name="role"
+              border={true}
+              checked={role === 2}
+              onClick={(e) => setRole(2)}
+            />
+            <FormRadioInput
+              labelContent="Hallgató (Egyéni felkészüléses)"
+              name="role"
+              border={true}
+              checked={role === 3}
+              onClick={(e) => setRole(3)}
+            />
+          </>
+        )}
       </div>
       <FormTextInput
-        inputPlaceholder="Firstname "
-        inputType="text"
-        inputValue={values.firstname}
-        onChange={(e) => setValues({ ...values, firstname: e.target.value })}
-      />
-      <FormTextInput
-        inputPlaceholder="Lastname "
+        inputPlaceholder="Vezetéknév "
         inputType="text"
         inputValue={values.lastname}
         onChange={(e) => setValues({ ...values, lastname: e.target.value })}
       />
       <FormTextInput
-        inputPlaceholder="Email "
+        inputPlaceholder="Keresztnév "
+        inputType="text"
+        inputValue={values.firstname}
+        onChange={(e) => setValues({ ...values, firstname: e.target.value })}
+      />
+      <FormTextInput
+        inputPlaceholder="E-mail "
         inputType="email"
         inputValue={values.email}
         onChange={(e) => setValues({ ...values, email: e.target.value })}
@@ -268,7 +278,7 @@ function AddPerson() {
       {role === 1 && (
         <div>
           <FormSelectInput
-            labelContent="Institution name"
+            labelContent="Intézmény neve"
             options={institution_names}
             onChange={(e) =>
               setConsultantValues({
@@ -278,7 +288,7 @@ function AddPerson() {
             }
           />
           <FormSelectInput
-            labelContent="Faculty name"
+            labelContent="Kar neve"
             options={faculty_names}
             onChange={(e) =>
               setConsultantValues({
@@ -288,7 +298,7 @@ function AddPerson() {
             }
           />
           <FormSelectInput
-            labelContent="Department name"
+            labelContent="Tanszék neve"
             options={department_names}
             onChange={(e) =>
               setConsultantValues({
@@ -297,8 +307,8 @@ function AddPerson() {
               })
             }
           />
-          <FormTextInput
-            inputPlaceholder="Topic "
+          {/* <FormTextInput
+            inputPlaceholder="Címe "
             inputType="text"
             inputValue={consultantValues.title}
             onChange={(e) =>
@@ -307,9 +317,9 @@ function AddPerson() {
                 title: e.target.value,
               })
             }
-          />
+          /> */}
           <FormSelectInput
-            labelContent="Institutional role"
+            labelContent="Beosztás"
             options={uni_roles}
             onChange={(e) =>
               setConsultantValues({
@@ -319,7 +329,7 @@ function AddPerson() {
             }
           />
           <FormSelectInput
-            labelContent="Degree"
+            labelContent="Tudományos fokozat"
             options={degree_types}
             onChange={(e) =>
               setConsultantValues({
@@ -338,31 +348,32 @@ function AddPerson() {
             handleDateChange={(date: Date) =>
               handleBirthDateChange(date, "birth_date")
             }
-            label="Birth date:"
+            label="Születés ideje:"
+          />
+          <FormTextInput
+            inputPlaceholder="Szak"
+            inputType="text"
+            inputValue={studentValues.faculty}
+            onChange={(e) =>
+              setStudentValues({ ...studentValues, faculty: e.target.value })
+            }
           />
           <FormSelectInput
-            labelContent="Consultant #1"
+            labelContent="Témavezető #1"
             options={consultants.map((consultant: Consultant) => {
               return consultant.lastname + " " + consultant.firstname;
             })}
             onChange={(e) => handleConsultantChange(e, 1)}
           />
           <FormSelectInput
-            labelContent="Consultant #2 (optional)"
+            labelContent="Témavezető #2 (nem kötelező)"
             options={consultants.map((consultant: Consultant) => {
               return consultant.lastname + " " + consultant.firstname;
             })}
             onChange={(e) => handleConsultantChange(e, 2)}
           />
-          <CustomDatePicker
-            selectedDate={studentValues.date_of_admission}
-            handleDateChange={(date: Date) =>
-              handleBirthDateChange(date, "date_of_admission")
-            }
-            label="Date of admission:"
-          />
           <FormTextInput
-            inputPlaceholder="Topic "
+            inputPlaceholder="Téma címe "
             inputType="text"
             inputValue={studentValues.topic}
             onChange={(e) =>
@@ -371,25 +382,25 @@ function AddPerson() {
           />
 
           <div className="my-2 text-center">
-            <label>Financing method</label>
+            <label>Finanszírozási forma:</label>
             <div className="flex flex-row justify-around flex-wrap">
               <RadioButton
                 value="Publicly funded"
-                label="Publicly funded"
+                label="Állami ösztöndíjas"
                 name="finance"
                 selectedValue={selectedFinance}
                 setSelectedValue={setSelectedFinance}
               />
               <RadioButton
                 value="Self funded"
-                label="Self funded"
+                label="Önköltséges"
                 name="finance"
                 selectedValue={selectedFinance}
                 setSelectedValue={setSelectedFinance}
               />
               <RadioButton
-                value="Stipendicum Hungaricum"
-                label="Stipendicum Hungaricum"
+                value="Stipendium Hungaricum"
+                label="Stipendium Hungaricum"
                 name="finance"
                 selectedValue={selectedFinance}
                 setSelectedValue={setSelectedFinance}
@@ -397,7 +408,7 @@ function AddPerson() {
               <div>
                 <RadioButton
                   value="Other"
-                  label="Other"
+                  label="Egyéb"
                   name="finance"
                   selectedValue={selectedFinance}
                   setSelectedValue={setSelectedFinance}
@@ -413,18 +424,24 @@ function AddPerson() {
                       financing: e.target.value,
                     });
                   }}
-                  inputPlaceholder="Finance type"
+                  inputPlaceholder="Finanszírozási forma"
                 />
               )}
-              {/* Datepicker: Date of admission */}
             </div>
           </div>
+          <CustomDatePicker
+            selectedDate={studentValues.date_of_admission}
+            handleDateChange={(date: Date) =>
+              handleBirthDateChange(date, "date_of_admission")
+            }
+            label="Felvétel dátuma:"
+          />
         </div>
       )}
       <div className="text-red-600 font-bold">{errorMessage}</div>
       <div className="text-green-600 font-bold">{successMessage}</div>
       <button type="submit" className="btn">
-        Submit
+        Hozzáadás
       </button>
     </form>
   );

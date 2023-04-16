@@ -4,7 +4,7 @@ import { generateDots } from "./protocol-document";
 import ResultsTable from "./table";
 import { styles } from "./styles-protocol";
 import Classification from "./classification";
-import { Exam } from "../../../types/typings";
+import { Exam } from "../../../../types/typings";
 
 function Page3({ exam }: { exam: Exam }) {
   return (

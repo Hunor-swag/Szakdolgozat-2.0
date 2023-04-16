@@ -3,7 +3,7 @@
 import { PDFViewer } from "@react-pdf/renderer";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { Committee, Exam } from "../../../../types/typings";
+import { Committee, Exam } from "../../../../../types/typings";
 import InvitationLetterDocument from "../invitation-letter-document";
 
 function InvitationLetterPdfViewer() {
@@ -23,9 +23,9 @@ function InvitationLetterPdfViewer() {
   const committee = (committeeData && JSON.parse(committeeData)) as Committee;
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-full flex-col items-center h-screen">
       <h1 className="text-3xl font-bold my-5">{`${committee.lastname} ${committee.firstname} `}</h1>
-      <PDFViewer className="w-3/4 h-screen">
+      <PDFViewer className="w-3/5 h-3/4">
         <InvitationLetterDocument exam={exam} committee={committee} />
       </PDFViewer>
     </div>

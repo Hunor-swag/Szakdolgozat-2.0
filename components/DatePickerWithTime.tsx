@@ -31,7 +31,6 @@ const DatePickerWithTime: React.FC<Props> = ({
         selected={startDate}
         onChange={handleChange}
         dateFormat="yyyy/MM/dd H:mm"
-        minDate={new Date()}
         showYearDropdown
         showTimeSelect
         timeFormat="H:mm"

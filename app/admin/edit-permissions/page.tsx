@@ -60,18 +60,18 @@ function EditPermissions() {
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <FormSelectInput
-        labelContent="User:"
+        labelContent="Felhasználó:"
         onChange={(e) => {
           setUser(e.target.value);
         }}
         options={users}
       />
       <FormSelectInput
-        labelContent="Role:"
+        labelContent="Szerepkör:"
         onChange={(e) => {
           setSelected(e.target.value);
         }}
-        options={["User", "Admin"]}
+        options={["Felhasználó", "Admin"]}
       />
       <div className={`text-center font-semibold ${message.color}`}>
         {message.msg}

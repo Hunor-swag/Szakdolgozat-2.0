@@ -7,8 +7,6 @@ import HeaderItem from "../components/HeaderItem";
 import Signout from "../components/Signout";
 
 const HomePage = () => {
-  const { data: session } = useSession();
-
   useEffect(() => {
     window.location.href = "/admin";
   }, []);

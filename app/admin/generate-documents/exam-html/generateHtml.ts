@@ -42,7 +42,7 @@ function generateHtml(exam: Exam) {
     <div>
     <div><span style="font-size: medium;"></span><span style="font-size: medium;"><span style="font-size: 12pt; font-family: 'Times New Roman', serif; color: #00000a;">A komplex vizsga nyilvánosságát személyes és online elérhetõséggel is biztosítjuk, az online jelenlét iránt érdeklõdõk egy kérdõív kitöltése és beküldése után kapnak hozzáférési linket. A kérdõív az érdeklõdõk számára az alábbi címen hozzáférhetõ:</span></span></div>
     <div>
-    <p style="margin-right: 7px; text-align: justify;"><a href="${exam.link}">${exam.link}</a></p>
+    <p style="margin-right: 7px; text-align: justify;"><a href="${exam.link}">Link</a></p>
     <span style="font-size: 12pt; font-family: arial, helvetica, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></div>
     <div><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">A komplex vizsga nyilvános, arra minden érdeklõdõt tisztelettel meghívunk!</span></div>
     </div>

@@ -6,37 +6,29 @@ import { useFetch } from "../../../../hooks/useFetch";
 import { Committee, Exam } from "../../../../types/typings";
 import { saveAs } from "file-saver";
 import generateText from "./generateText";
+import { useSearchParams } from "next/navigation";
 
 function InvitationLetterText() {
-  const { data: exams, error: errorExams } = useFetch("/api/exams");
+  const searchParams = useSearchParams();
+  const examData = searchParams?.get("exam");
+
+  const exam = (examData && JSON.parse(examData)) as Exam;
+
   const { data: committees, error: errorCommittees } =
     useFetch("/api/committees");
-  const [selectedExam, setSelectedExam] = useState<Exam>();
   const [selectedCommittee, setSelectedCommittee] = useState<Committee>();
-
-  const handleExamChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const examsArray = exams as Exam[];
-    const selectedExamData = examsArray.find((exam) => {
-      return (
-        `${exam.student.lastname} ${exam.student.firstname}` === e.target.value
-      );
-    });
-
-    setSelectedExam(selectedExamData);
-  };
 
   const handleCommitteeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const committeesArray = committees as Committee[];
     const selectedCommitteeData = committeesArray.find((committee) => {
       return `${committee.lastname} ${committee.firstname}` === e.target.value;
     });
-    console.log(selectedCommitteeData);
     setSelectedCommittee(selectedCommitteeData);
   };
 
   const handleClick = () => {
-    if (!selectedExam || !selectedCommittee) return;
-    const textContent = generateText(selectedExam, selectedCommittee);
+    if (!selectedCommittee) return;
+    const textContent = generateText(exam, selectedCommittee);
     const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
     saveAs(
       blob,
@@ -47,26 +39,16 @@ function InvitationLetterText() {
   return (
     <div className="flex flex-col itmes-center">
       <FormSelectInput
-        labelContent="Vizsga"
-        onChange={handleExamChange}
-        options={exams.map((exam: Exam) => {
-          let examData = exam as Exam;
-          return `${examData.student.lastname} ${examData.student.firstname} `;
-        })}
+        labelContent="Tag"
+        onChange={handleCommitteeChange}
+        options={exam?.commission.map(
+          (committee: Committee) =>
+            `${committee.lastname} ${committee.firstname}`
+        )}
       />
-      {selectedExam && (
-        <FormSelectInput
-          labelContent="Tag"
-          onChange={handleCommitteeChange}
-          options={selectedExam?.commission.map(
-            (committee: Committee) =>
-              `${committee.lastname} ${committee.firstname}`
-          )}
-        />
-      )}
 
       <button className="btn" onClick={handleClick}>
-        Download Text File
+        Szövegfájl letöltése
       </button>
     </div>
   );

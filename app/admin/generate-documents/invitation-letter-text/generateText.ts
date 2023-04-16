@@ -46,43 +46,33 @@ export default function generateText(exam: Exam, committee: Committee) {
     "A Doktori Iskola vezetõje az alábbi komplex vizsga bizottság felállítására tett javaslatot, amelyet a Doktori Iskola Tanácsa is elfogadott:\n\n";
 
   text += "elnök: \t";
-  text += chairman.lastname + " " + chairman.firstname + ", ";
+  text += chairman.name + ", ";
   text += chairman.degree + ", ";
   text += chairman.uni_role + ", ";
   text += chairman.short_institution_name + "\n\n";
 
   text += "tagok: \t";
-  text +=
-    main_subj_examiner?.lastname + " " + main_subj_examiner?.firstname + ", ";
+  text += main_subj_examiner?.name + ", ";
   text += main_subj_examiner?.degree + ", ";
   text += main_subj_examiner?.uni_role + ", ";
   text += main_subj_examiner?.short_institution_name + ", ";
   text += "a " + exam.main_subject + " fõtárgy vizsgáztatója\n\n";
 
   text += "\t\t";
-  text +=
-    other_subj_examiner?.lastname + " " + other_subj_examiner?.firstname + ", ";
+  text += other_subj_examiner?.name + ", ";
   text += other_subj_examiner?.degree + ", ";
   text += other_subj_examiner?.uni_role + ", ";
   text += other_subj_examiner?.short_institution_name + ", ";
   text += "a " + exam.other_subject + " melléktárgy vizsgáztatója\n\n";
 
   text += "\t\t";
-  text +=
-    commission_members[0]?.lastname +
-    " " +
-    commission_members[0]?.firstname +
-    ", ";
+  text += commission_members[0]?.name + ", ";
   text += commission_members[0]?.degree + ", ";
   text += commission_members[0]?.uni_role + ", ";
   text += commission_members[0]?.short_institution_name + "\n\n";
 
   text += "\t\t";
-  text +=
-    commission_members[1]?.lastname +
-    " " +
-    commission_members[1]?.firstname +
-    ", ";
+  text += commission_members[1]?.name + ", ";
   text += commission_members[1]?.degree + ", ";
   text += commission_members[1]?.uni_role + ", ";
   text += commission_members[1]?.short_institution_name + "\n\n";

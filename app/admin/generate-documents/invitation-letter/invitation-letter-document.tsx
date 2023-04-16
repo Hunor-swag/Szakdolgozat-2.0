@@ -10,8 +10,8 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import { styles } from "./styles-invitation-letter";
-import { getDateString } from "../../../functions/getDateString";
-import { Committee, Exam } from "../../../types/typings";
+import { getDateString } from "../../../../functions/getDateString";
+import { Committee, Exam } from "../../../../types/typings";
 
 type Props = {
   exam: Exam;
@@ -31,7 +31,6 @@ function capitalizeFirstLetter(str: string) {
 
 const InvitationLetterDocument = ({ exam, committee }: Props) => {
   const date = new Date();
-  console.log(exam.student.consultant2);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -48,31 +47,27 @@ const InvitationLetterDocument = ({ exam, committee }: Props) => {
         </View>
         <View style={styles.committeeDataContainer}>
           <Text style={{ fontFamily: "Times-Bold" }}>
-            {committee.firstname} {committee.lastname}, {committee.degree}
+            {committee.name}, {committee.degree}
           </Text>
-          <Text>{committee.uni_role}</Text>
-          <Text>{committee.institution_name}</Text>
+          <Text>{committee.uni_role.toLowerCase()}</Text>
+          <Text>{committee.short_institution_name}</Text>
           <Text>{committee.department_name}</Text>
           <Text>{exam.venue === "" ? "Online" : "Helyben"}</Text>
         </View>
         <View style={styles.contentAndTitleContainer}>
           <View style={styles.title}>
             <Text>
-              Tisztelt {capitalizeFirstLetter(committee.uni_role)} Asszony/Úr!
+              Tisztelt {capitalizeFirstLetter(committee.uni_role.toLowerCase())}{" "}
+              Úr!
               {"\n"}
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.content}>
-              {exam.student.lastname} {exam.student.lastname}, a Pannon Egyetem
-              Informatikai Tudományok Doktori Iskola PhD hallgatója
-              (Témavezető(k): {exam.student.consultant1.lastname}{" "}
-              {exam.student.consultant1.firstname}
-              {exam.student.consultant2 &&
-                ", " +
-                  exam.student.consultant2.lastname +
-                  " " +
-                  exam.student.consultant2.firstname}
+              {exam.student.name}, a Pannon Egyetem Informatikai Tudományok
+              Doktori Iskola PhD hallgatója (Témavezető(k):{" "}
+              {exam.student.consultant1.name}
+              {exam.student.consultant2 && ", " + exam.student.consultant2.name}
               ) jelentkezett komplex vizsgára. A komplex vizsgára javasolt
               bizottságot a Doktori Iskola Tanácsa elfogadta. {"\n"}
               A Doktori Iskola Tanácsa javaslatát elfogadva kérdem, hogy az
@@ -95,8 +90,8 @@ const InvitationLetterDocument = ({ exam, committee }: Props) => {
             <View style={styles.tableColumn2}>
               <Text>
                 <Text>
-                  {exam.commission[0].lastname} {exam.commission[0].firstname},{" "}
-                  {exam.commission[0].degree}, {exam.commission[0].uni_role},{" "}
+                  {exam.commission[0].name}, {exam.commission[0].degree},{" "}
+                  {exam.commission[0].uni_role.toLowerCase()},{" "}
                   {exam.commission[0].short_institution_name}
                 </Text>
               </Text>
@@ -111,8 +106,8 @@ const InvitationLetterDocument = ({ exam, committee }: Props) => {
                 if (committee.main_subj_examiner)
                   return (
                     <Text key={index}>
-                      {committee.lastname} {committee.firstname},{" "}
-                      {committee.degree}, {committee.uni_role},{" "}
+                      {committee.name}, {committee.degree},{" "}
+                      {committee.uni_role.toLowerCase()},{" "}
                       {committee.short_institution_name} {"\n"}
                       {exam.main_subject} {"\n"}
                     </Text>
@@ -120,8 +115,8 @@ const InvitationLetterDocument = ({ exam, committee }: Props) => {
                 if (committee.other_subj_examiner)
                   return (
                     <Text key={index}>
-                      {committee.lastname} {committee.firstname},{" "}
-                      {committee.degree}, {committee.uni_role},{" "}
+                      {committee.name}, {committee.degree},{" "}
+                      {committee.uni_role.toLowerCase()},{" "}
                       {committee.short_institution_name} {"\n"}
                       {exam.other_subject} {"\n"}
                     </Text>
@@ -143,8 +138,8 @@ const InvitationLetterDocument = ({ exam, committee }: Props) => {
                   )
                     return (
                       <Text key={index}>
-                        {committee.lastname} {committee.firstname},{" "}
-                        {committee.degree}, {committee.uni_role},{" "}
+                        {committee.name}, {committee.degree},{" "}
+                        {committee.uni_role.toLowerCase()},{" "}
                         {committee.short_institution_name} {"\n"}
                       </Text>
                     );

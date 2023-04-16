@@ -6,4 +6,7 @@
   .btn {
     @apply p-2 rounded-md my-2 bg-gray-500 hover:bg-gray-400;
   }
+  .table-cell{
+    @apply p-5 text-xl border-2 border-black
+  }
 }

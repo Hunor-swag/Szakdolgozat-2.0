@@ -3,7 +3,7 @@
 import { PDFViewer } from "@react-pdf/renderer";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { Exam } from "../../../../types/typings";
+import { Exam } from "../../../../../types/typings";
 import ProtocolDocument from "../protocol-document";
 
 function ProtocolPdfViewer() {
@@ -21,9 +21,11 @@ function ProtocolPdfViewer() {
   const exam = (examData && JSON.parse(examData)) as Exam;
 
   return (
-    <PDFViewer className="w-full h-screen">
-      <ProtocolDocument exam={exam} />
-    </PDFViewer>
+    <div className="flex justify-center w-full h-screen">
+      <PDFViewer className="w-3/5 h-3/4">
+        <ProtocolDocument exam={exam} />
+      </PDFViewer>
+    </div>
   );
 }
 

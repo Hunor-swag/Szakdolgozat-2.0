@@ -1,7 +1,8 @@
 "use client";
 
 import { Page, View, Text } from "@react-pdf/renderer";
-import { Committee, Exam } from "../../../types/typings";
+import { getDateString } from "../../../../functions/getDateString";
+import { Committee, Exam } from "../../../../types/typings";
 import {
   displayCommitteeData,
   displayConsultantData,
@@ -32,14 +33,15 @@ function Page1({ exam }: { exam: Exam }) {
         <Text style={styles.student_data}>
           <Text style={{ textDecoration: "underline" }}>Tárgy:</Text>{" "}
           {exam.student.lastname} {exam.student.firstname} okleveles{" "}
-          {exam.student.faculty} ({exam.student.birth_city},{" "}
-          {exam.student.birth_date}) Komplex vizsgája
+          {exam.student.faculty_name.toLowerCase()} (
+          {getDateString(new Date(exam.student.birth_date))}) Komplex vizsgája
         </Text>
         <Text>
-          A komplex vizsga helyszíne: Veszprém, Pannon Egyetem, {} épület {}.
+          A komplex vizsga helyszíne: Veszprém, Pannon Egyetem, {exam.building}{" "}
+          épület {exam.room}.
         </Text>
         <Text>
-          A komplex vizsga időpontja: {exam.date} {exam.time}
+          A komplex vizsga időpontja: {getDateString(new Date(exam.date), true)}
         </Text>
       </View>
       <View style={styles.commission_content}>
@@ -105,9 +107,7 @@ function Page1({ exam }: { exam: Exam }) {
             </Text>
           </View>
         </View>
-        <Text>
-          Jegyzőkönyvvezető: {"\t"} {exam.protocol_writer}
-        </Text>
+        <Text>Jegyzőkönyvvezető: {exam.protocol_writer}</Text>
       </View>
 
       <View>
