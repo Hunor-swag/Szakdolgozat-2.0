@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { collection, doc, getDocs, DocumentData } from "firebase/firestore";
+import { collection, getDocs, DocumentData } from "firebase/firestore";
 import { db } from "../../firebase";
 
 export default async function handler(
@@ -14,7 +14,7 @@ export default async function handler(
     if (docList.length > 0) {
       res.status(200).json(docList);
     } else {
-      res.status(404).json({ message: "No data found" });
+      res.status(404).json({ message: "No consultant data found" });
     }
   } catch (error) {
     console.error(error);

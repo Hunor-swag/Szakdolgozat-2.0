@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const data = { ...req.body, role: "user" };
+      const data = { ...req.body, role: "admin" };
 
       await setDoc(doc(db, "users", data.email), data);
       console.log(`User created for email ${data.email}`);

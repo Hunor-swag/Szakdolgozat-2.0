@@ -12,7 +12,7 @@ function GenerateDocuments() {
   return (
     <div className="flex justify-center">
       <div className="table border-collapse">
-        <div className="table-row border-b-4 border-black font-bold">
+        <div className="table-row border-b-4 border-slate-500 font-bold">
           <div className="table-cell">Hallgató</div>
           <div className="table-cell">Felkérőlevelek (txt)</div>
           <div className="table-cell">Meghívólevelek (pdf)</div>

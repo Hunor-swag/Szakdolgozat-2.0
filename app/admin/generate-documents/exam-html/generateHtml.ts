@@ -22,7 +22,7 @@ function generateHtml(exam: Exam) {
   );
 
   return `
-    <p><img style="margin: 10px; float: left;" src="images/other/talarsapka.jpg" alt="talarsapka" width="200" height="150" /><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">Az Informatikai Tudományok Doktori Iskola 2023. január 12-én 13 órai kezdettel az egyetem ${exam.building} épületének ${exam.room}-os termében komplex vizsgát tart. </span><br /><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">${exam.student.lastname} ${exam.student.firstname} doktorandusz hallgató a komplex vizsgához szükséges kötelezettségét teljesítette, ezért kérése alapján a Doktori Iskola Tanácsa engedélyezte számára a komplex vizsgát.</span></p>
+    <p><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">Az Informatikai Tudományok Doktori Iskola 2023. január 12-én 13 órai kezdettel az egyetem ${exam.building} épületének ${exam.room}-os termében komplex vizsgát tart. </span><br /><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">${exam.student.lastname} ${exam.student.firstname} doktorandusz hallgató a komplex vizsgához szükséges kötelezettségét teljesítette, ezért kérése alapján a Doktori Iskola Tanácsa engedélyezte számára a komplex vizsgát.</span></p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <hr id="system-readmore" />

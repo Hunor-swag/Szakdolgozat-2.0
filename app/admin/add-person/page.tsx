@@ -260,7 +260,12 @@ function AddPerson() {
         inputPlaceholder="Vezetéknév "
         inputType="text"
         inputValue={values.lastname}
-        onChange={(e) => setValues({ ...values, lastname: e.target.value })}
+        onChange={(e) =>
+          setValues((prevValues) => ({
+            ...prevValues,
+            lastname: e.target.value,
+          }))
+        }
       />
       <FormTextInput
         inputPlaceholder="Keresztnév "

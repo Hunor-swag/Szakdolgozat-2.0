@@ -2,7 +2,8 @@
 
 import "../styles/globals.css";
 import { useState } from "react";
-import FormTextInput from "../components/FormTextInput";
+import { FormTextInput } from "../components/FormTextInput";
+import Link from "next/link";
 
 function Register() {
   const [email, setEmail] = useState<string>("");
@@ -32,25 +33,31 @@ function Register() {
 
   return (
     <div className="bg-gray-700 text-white w-screen h-screen">
-      <h1 className="text-center text-3xl font-semibold">Register</h1>
+      <h1 className="text-center text-3xl font-semibold">Regisztráció</h1>
       <form
         onSubmit={onSubmit}
         className="flex flex-col items-center justify-center"
       >
-        <FormTextInput
-          inputType="email"
-          inputValue={email}
-          inputPlaceholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <FormTextInput
-          inputType="password"
-          inputValue={password}
-          inputPlaceholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="btn">Submit</button>
-        <div></div>
+        <div>
+          <FormTextInput
+            inputType="email"
+            inputValue={email}
+            inputPlaceholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <FormTextInput
+            inputType="password"
+            inputValue={password}
+            inputPlaceholder="Jelszó"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="w-full flex justify-between">
+            <button className="btn">Regisztráció</button>
+            <Link href="/">
+              <button className="btn">Belépés</button>
+            </Link>
+          </div>
+        </div>
       </form>
     </div>
   );

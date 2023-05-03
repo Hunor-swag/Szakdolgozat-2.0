@@ -24,7 +24,7 @@ function InvitationLetterPdfViewer() {
 
   return (
     <div className="flex w-full flex-col items-center h-screen">
-      <h1 className="text-3xl font-bold my-5">{`${committee.lastname} ${committee.firstname} `}</h1>
+      <h1 className="text-3xl font-bold my-5">{`${committee.lastname} ${committee.firstname} meghívólevele`}</h1>
       <PDFViewer className="w-3/5 h-3/4">
         <InvitationLetterDocument exam={exam} committee={committee} />
       </PDFViewer>

@@ -16,6 +16,7 @@ function InvitationLetterText() {
 
   const { data: committees, error: errorCommittees } =
     useFetch("/api/committees");
+
   const [selectedCommittee, setSelectedCommittee] = useState<Committee>();
 
   const handleCommitteeChange = (e: ChangeEvent<HTMLSelectElement>) => {
