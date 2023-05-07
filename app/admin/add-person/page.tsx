@@ -443,7 +443,7 @@ function AddPerson() {
           />
         </div>
       )}
-      <div className="text-red-600 font-bold">{errorMessage}</div>
+      <div className="text-red-400 font-bold">{errorMessage}</div>
       <div className="text-green-600 font-bold">{successMessage}</div>
       <button type="submit" className="btn">
         Hozzáadás
